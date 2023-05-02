@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 import { getLogger } from './helpers'
 import TtlCache from './ttl-cache'
-import { addresses, ARBITRUM, AVALANCHE } from './addresses'
+import { addresses, ARBITRUM, AVALANCHE, BASE } from './addresses'
 import { toReadable, sleep } from './utils'
 import { getPricesClient } from './graph'
 import { isEqual } from 'lodash'
@@ -33,7 +33,8 @@ const VALID_PERIODS = new Set(Object.keys(PERIOD_TO_SECONDS))
 */
 const cachedPrices = {
   [ARBITRUM]: {},
-  [AVALANCHE]: {}
+  [AVALANCHE]: {},
+  [BASE]: {}
 }
 const candleByPriceId = {}
 // both Arbitrum and Avalanche don't have older prices
@@ -46,7 +47,7 @@ function putPricesIntoCache(prices, chainId, append) {
   if (!prices || !chainId) {
     throw new Error('Invalid arguments')
   }
-  
+
   let ret = true
   const groupByTokenAndPeriod = prices.reduce((acc, price) => {
     const token = price.token
@@ -78,10 +79,10 @@ function putPricesIntoCache(prices, chainId, append) {
     Date.now() - start,
     process.env.HOSTNAME
   )
-  
+
   return ret
 }
-  
+
 function priceToCandle(price) {
   return {
     t: price.timestamp,
@@ -129,7 +130,7 @@ function putPricesForTokenAndPeriodIntoCache(prices, chainId, token, period, app
       candleByPriceId[price.id] = candle
     }
   }
-  
+
   if (!IS_PRODUCTION) {
     let prev = null
     cachedPrices[chainId][token][period].forEach(p => {
@@ -201,7 +202,7 @@ function getPrices(preferableChainId = ARBITRUM, symbol, period) {
   if (!cachedPrices[preferableChainId][tokenAddress][period]) {
     return []
   }
-  
+
   return cachedPrices[preferableChainId][tokenAddress][period]
 }
 
@@ -213,7 +214,7 @@ async function loadNewPrices(chainId, period) {
   if (!chainId) {
     throw new Error('requires chainId')
   }
-  
+
   const getQuery = () => `{
     priceCandles(
       first: 100
@@ -321,7 +322,7 @@ async function loadOldPrices(chainId, period) {
       }
       before = prices[prices.length - 1].timestamp
       logger.info("New before: %s", toReadable(before))
-      
+
       await sleep(LOAD_OLD_PRICES_LOOP_INTERVAL)
     } catch (ex) {
       logger.warn("loop failed, sleep 15 seconds")

@@ -4,7 +4,7 @@ import { getLogger } from './helpers'
 
 import TtlCache from './ttl-cache'
 import { getStatsClient } from './graph'
-import { ARBITRUM, AVALANCHE } from './addresses'
+import { ARBITRUM, AVALANCHE, BASE } from './addresses'
 
 const CACHE_TTL = 300
 const ttlCache = new TtlCache(CACHE_TTL, 10)
@@ -19,7 +19,7 @@ async function updateCache() {
   } catch (ex) {
     logger.error(ex)
   }
-  
+
   setTimeout(updateCache, CACHE_TTL / 2 * 1000);
 }
 updateCache();
@@ -28,7 +28,7 @@ async function get24HourVolumeForChain(chainId) {
   const client = getStatsClient(chainId);
   const query = `{
     volumeStats(
-      orderBy: ${chainId === ARBITRUM ? "id" : "timestamp"},
+      orderBy: ${chainId === AVALANCHE ? "timestamp" : "id"},
       orderDirection: desc,
       first: 24
       where: { period: hourly }
@@ -47,7 +47,7 @@ async function get24HourVolumeForChain(chainId) {
   const volume = data.volumeStats.reduce((acc, item) => {
     return acc.add(item.swap).add(item.margin).add(item.liquidation).add(item.mint).add(item.burn);
   }, ethers.BigNumber.from(0));
-  
+
   return volume;
 }
 
@@ -56,17 +56,19 @@ export async function get24HourVolume(useCache = true) {
   if (useCache && cached) {
     return cached
   }
-  
+
   logger.info('Requesting 24h volume from subgraphs')
-  const [arbitrumVolume, avalancheVolume] = await Promise.all([
+  const [arbitrumVolume, avalancheVolume, baseVolume] = await Promise.all([
     get24HourVolumeForChain(ARBITRUM),
-    get24HourVolumeForChain(AVALANCHE)
+    get24HourVolumeForChain(AVALANCHE),
+    get24HourVolumeForChain(BASE),
   ]);
 
   const totalVolume = arbitrumVolume.add(avalancheVolume);
   const ret = {
     [ARBITRUM]: arbitrumVolume.toString(),
     [AVALANCHE]: avalancheVolume.toString(),
+    [BASE]: baseVolume.toString(),
     total: totalVolume.toString()
   }
   ttlCache.set('24HourVolume', ret)

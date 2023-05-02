@@ -2,6 +2,8 @@ export const BSC = 56
 export const ARBITRUM = 42161
 export const AVALANCHE = 43114
 
+export const BASE = 84531;
+
 export const addresses = {
     [BSC]: {
         Vault: "0xc73A8DcAc88498FD4b4B1b2AaA37b0a2614Ff67B",
@@ -34,7 +36,19 @@ export const addresses = {
         RewardReader: '0x04Fc11Bd28763872d143637a7c768bD96E44c1b6',
         GLP: '0x01234181085565ed162a948b6a5e88758CD7c7b8',
         GlpManager: '0xe1ae4d4b06A5Fe1fc288f6B4CD72f9F8323B107F'
-    }
+    },
+    [BASE]: {
+        GMX: '0x9fD329310b43d00AAf050518200732AC45f34dC5',
+        BTC: '0x5fE699663197083711137060e3774b9ecDee16D2',
+        ETH: '0x4200000000000000000000000000000000000006',
+        LINK: '0x1ef0A4Cd5cD4cd23D3dFFB8ec657D92206B11005',
+        USDT: '0xdcD63E6142A900DC1E1780595B2D165C6459104E',
+        DAI: '0xaA23a4d90a50A06E171d32EE75897cDCa4BC3F51',
+        USDC: '0x4f526361313618a87E952720F3eF5b44Dcd7C9c3',
+        RewardReader: '0x862b9dc42B38c2929b0683D20BD4057C410f2A61',
+        GLP: '0xBDef5112499384108f054FcB20f96A725dC64edf',
+        GlpManager: '0xE76eEc5A8561Bf5fc01c5e4946F66aE5e2f07CF5'
+    },
 }
 
 export function getAddress(chainId, key) {

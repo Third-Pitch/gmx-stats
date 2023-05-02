@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 
-import { ARBITRUM, AVALANCHE } from './addresses'
+import { ARBITRUM, AVALANCHE, BASE } from './addresses'
 
 const apolloOptions = {
   query: {
@@ -23,12 +23,22 @@ const avalancheStatsClient = new ApolloClient({
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })
-  
+
+const baseStatsClient = new ApolloClient({
+  link: new HttpLink({ uri: 'https://api.studio.thegraph.com/proxy/45535/test-stats/0.0.1', fetch }),
+  cache: new InMemoryCache(),
+  defaultOptions: apolloOptions
+})
+
+
+
 function getStatsClient(chainId) {
   if (chainId === ARBITRUM) {
     return arbitrumStatsClient
   } else if (chainId === AVALANCHE) {
     return avalancheStatsClient
+  } else if (chainId === BASE) {
+    return baseStatsClient;
   }
   throw new Error(`Invalid chainId ${chainId}`)
 }
@@ -45,11 +55,19 @@ const avalanchePricesClient = new ApolloClient({
   defaultOptions: apolloOptions
 })
 
+const basePricesClient = new ApolloClient({
+  link: new HttpLink({ uri: 'https://api.studio.thegraph.com/query/45535/test-price/0.0.1', fetch }),
+  cache: new InMemoryCache(),
+  defaultOptions: apolloOptions
+})
+
 function getPricesClient(chainId) {
   if (chainId === ARBITRUM) {
     return arbitrumPricesClient
   } else if (chainId === AVALANCHE) {
     return avalanchePricesClient
+  } else if (chainId === BASE) {
+    return basePricesClient;
   } else {
     throw new Error(`Invalid chainId ${chainId}`)
   }
