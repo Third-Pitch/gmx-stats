@@ -546,7 +546,6 @@ export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
 
 export function useTotalVolumeFromServer() {
   const [data, loading] = useRequest('https://gmx-server-mainnet.uw.r.appspot.com/total_volume')
-
   return useMemo(() => {
     if (!data) {
       return [data, loading]

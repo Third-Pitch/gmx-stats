@@ -3,8 +3,8 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { renderToString } from 'react-dom/server';
 
-import { createHttpError }  from './utils';
-import { ARBITRUM, AVALANCHE } from './addresses'
+import { createHttpError } from './utils';
+import { ARBITRUM, AVALANCHE, BASE } from './addresses'
 import { getPricesLimit, getLastUpdatedTimestamp, VALID_PERIODS } from './prices'
 import { get24HourVolume } from './stats'
 
@@ -18,16 +18,16 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const cssLinksFromAssets = (assets, entrypoint) => {
   return assets[entrypoint] ? assets[entrypoint].css ?
-  assets[entrypoint].css.map(asset=>
-    `<link rel="stylesheet" href="${asset}">`
-  ).join('') : '' : '';
+    assets[entrypoint].css.map(asset =>
+      `<link rel="stylesheet" href="${asset}">`
+    ).join('') : '' : '';
 };
 
 const jsScriptTagsFromAssets = (assets, entrypoint, extra = '') => {
   return assets[entrypoint] ? assets[entrypoint].js ?
-  assets[entrypoint].js.map(asset=>
-    `<script src="${asset}"${extra}></script>`
-  ).join('') : '' : '';
+    assets[entrypoint].js.map(asset =>
+      `<script src="${asset}"${extra}></script>`
+    ).join('') : '' : '';
 };
 
 const { formatUnits } = ethers.utils
@@ -58,7 +58,7 @@ export default function routes(app) {
     res.set('Content-Type', 'text/plain')
     res.send(formatUnits(data))
   })
-  
+
   app.get('/api/volume/24h', async (req, res, next) => {
     const volumeData = await get24HourVolume()
     res.send(volumeData)
@@ -70,7 +70,7 @@ export default function routes(app) {
       next(createHttpError(400, `Invalid period. Valid periods are ${Array.from(VALID_PERIODS)}`))
       return
     }
-    
+
     const validSymbols = new Set(['BTC', 'ETH', 'BNB', 'UNI', 'LINK', 'AVAX'])
     const symbol = req.params.symbol
     if (!validSymbols.has(symbol)) {
@@ -78,12 +78,12 @@ export default function routes(app) {
       return
     }
     const preferableChainId = Number(req.query.preferableChainId)
-    const validSources = new Set([ARBITRUM, AVALANCHE])
+    const validSources = new Set([ARBITRUM, AVALANCHE, BASE])
     if (!validSources.has(preferableChainId)) {
-      next(createHttpError(400, `Invalid preferableChainId ${preferableChainId}. Valid options are ${ARBITRUM}, ${AVALANCHE}`))
+      next(createHttpError(400, `Invalid preferableChainId ${preferableChainId}. Valid options are ${ARBITRUM}, ${AVALANCHE}, ${BASE}`))
       return
     }
-    
+
     const MAX_LIMIT = 5000
     let limit = 5000
     if (req.query.limit) {
@@ -93,7 +93,7 @@ export default function routes(app) {
         return
       }
       if (limit > MAX_LIMIT) {
-        limit = MAX_LIMIT 
+        limit = MAX_LIMIT
       }
     }
 
