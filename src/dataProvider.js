@@ -12,7 +12,7 @@ const formatUnits = ethers.utils.formatUnits
 const { JsonRpcProvider } = ethers.providers
 
 import RewardReader from '../abis/RewardReader.json'
-import ElpManager from '../abis/ElpManager.json'
+import ElpManager from '../abis/GlpManager.json'
 import Token from '../abis/v1/Token.json'
 
 const providers = {
