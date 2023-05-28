@@ -58,16 +58,16 @@ export async function get24HourVolume(useCache = true) {
   }
 
   logger.info('Requesting 24h volume from subgraphs')
-  const [arbitrumVolume, avalancheVolume, baseVolume] = await Promise.all([
-    get24HourVolumeForChain(ARBITRUM),
-    get24HourVolumeForChain(AVALANCHE),
+  const [baseVolume] = await Promise.all([
+    // get24HourVolumeForChain(ARBITRUM),
+    // get24HourVolumeForChain(AVALANCHE),
     get24HourVolumeForChain(BASE),
   ]);
 
-  const totalVolume = arbitrumVolume.add(avalancheVolume);
+  const totalVolume = baseVolume;
   const ret = {
-    [ARBITRUM]: arbitrumVolume.toString(),
-    [AVALANCHE]: avalancheVolume.toString(),
+    // [ARBITRUM]: arbitrumVolume.toString(),
+    // [AVALANCHE]: avalancheVolume.toString(),
     [BASE]: baseVolume.toString(),
     total: totalVolume.toString()
   }
