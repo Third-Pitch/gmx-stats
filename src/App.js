@@ -7,9 +7,9 @@ import Referrals from './views/Referrals';
 import Avalanche from './views/Avalanche';
 import Trading from './views/Trading';
 import './App.css';
-import logoIcon from './img/logo_GMX.svg';
-import darkLogoIcon from './img/logo_GMX_dark.svg';
-import lightLogoIcon from './img/logo_GMX_light.svg';
+import logoIcon from './img/logo_EDDX.svg';
+import darkLogoIcon from './img/logo_EDDX_dark.svg';
+import lightLogoIcon from './img/logo_EDDX_light.svg';
 import { FaSun, FaMoon, FaTimes } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import { RiMenuLine } from 'react-icons/ri';
@@ -23,7 +23,7 @@ function AppHeaderLinks({ mode, small, clickCloseIcon }) {
             <FiX className="App-header-menu-icon" />
           </div>
           <NavLink exact activeClassName="active" className="App-header-link-main" to="/">
-            <img src={logoIcon} alt="GMX Logo" />
+            <img src={logoIcon} alt="EDDX Logo" />
           </NavLink>
         </div>
       }
@@ -90,15 +90,15 @@ const App = () => {
                 {!isDrawerVisible && <RiMenuLine className="App-header-menu-icon" />}
                 {isDrawerVisible && <FaTimes className="App-header-menu-icon" />}
               </div>
-              <a href="https://gmx.io" target="_blank" className="nav-logo">
+              <a href="https://eddx.io" target="_blank" className="nav-logo">
                 <img width="87" src={mode == 'dark' ? darkLogoIcon : lightLogoIcon} />
               </a>
               <NavLink to="/" exact className="nav-link" activeClassName="active">Arbitrum</NavLink>
               <NavLink to="/avalanche" className="nav-link">Avalanche</NavLink>
             </div>
             <div className="nav-right">
-              <a href="https://gmx.io" target="_blank" className="nav-link">APP</a>
-              <a href="https://gmxio.gitbook.io/gmx/" target="_blank" className="nav-link">DOCS</a>
+              <a href="https://eddx.io" target="_blank" className="nav-link">APP</a>
+              <a href="https://eddxio.gitbook.io/eddx/" target="_blank" className="nav-link">DOCS</a>
               <div className='modeselect' onClick={() => switchMode()}>
                 {mode == 'dark' ? <FaSun /> : <FaMoon />}
               </div>

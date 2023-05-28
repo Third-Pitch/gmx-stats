@@ -52,8 +52,8 @@ export default function routes(app) {
     }
   })
 
-  app.get('/api/gmx-supply', async (req, res) => {
-    const apiResponse = await fetch('https://api.gmx.io/gmx_supply')
+  app.get('/api/eddx-supply', async (req, res) => {
+    const apiResponse = await fetch('https://api.eddx.io/eddx_supply')
     const data = (await apiResponse.text()).toString()
     res.set('Content-Type', 'text/plain')
     res.send(formatUnits(data))
@@ -136,7 +136,7 @@ export default function routes(app) {
           <head>
               <meta http-equiv="X-UA-Compatible" content="IE=edge" />
               <meta charset="utf-8" />
-              <title>GMX analytics</title>
+              <title>EDDX analytics</title>
               <meta name="viewport" content="width=device-width, initial-scale=1">
               <link rel="icon" type="image/png" href="/favicon.png" />
               ${cssAssetsTag}

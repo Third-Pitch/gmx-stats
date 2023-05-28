@@ -13,13 +13,13 @@ const apolloOptions = {
 }
 
 const arbitrumStatsClient = new ApolloClient({
-  link: new HttpLink({ uri: 'https://api.thegraph.com/subgraphs/name/gmx-io/gmx-stats', fetch }),
+  link: new HttpLink({ uri: 'https://api.thegraph.com/subgraphs/name/eddx-io/eddx-stats', fetch }),
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })
 
 const avalancheStatsClient = new ApolloClient({
-  link: new HttpLink({ uri: 'https://api.thegraph.com/subgraphs/name/gmx-io/gmx-avalanche-stats', fetch }),
+  link: new HttpLink({ uri: 'https://api.thegraph.com/subgraphs/name/eddx-io/eddx-avalanche-stats', fetch }),
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })
@@ -44,13 +44,13 @@ function getStatsClient(chainId) {
 }
 
 const arbitrumPricesClient = new ApolloClient({
-  link: new HttpLink({ uri: 'https://subgraph.satsuma-prod.com/034a09e5f609/gmx/gmx-arbitrum-prices/api', fetch }),
+  link: new HttpLink({ uri: 'https://subgraph.satsuma-prod.com/034a09e5f609/eddx/eddx-arbitrum-prices/api', fetch }),
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })
 
 const avalanchePricesClient = new ApolloClient({
-  link: new HttpLink({ uri: 'https://subgraph.satsuma-prod.com/034a09e5f609/gmx/gmx-avalanche-prices/api', fetch }),
+  link: new HttpLink({ uri: 'https://subgraph.satsuma-prod.com/034a09e5f609/eddx/eddx-avalanche-prices/api', fetch }),
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })

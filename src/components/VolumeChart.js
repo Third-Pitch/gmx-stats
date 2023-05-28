@@ -35,8 +35,8 @@ export default function VolumeChart(props) {
   const csvFields = [
     {key: 'swap', name: 'Swap'},
     {key: 'margin', name: 'Margin trading'},
-    {key: 'mint', name: 'Mint GLP'},
-    {key: 'burn', name: 'Burn GLP'},
+    {key: 'mint', name: 'Mint ELP'},
+    {key: 'burn', name: 'Burn ELP'},
     {key: 'liquidation', name: 'Liquidation'},
     {key: 'cumulative', name: 'Cumulative'}
   ];
@@ -85,8 +85,8 @@ export default function VolumeChart(props) {
           <Legend />
 
           <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="swap" stackId="a" name="Swap" fill={COLORS[0]} />
-          <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="mint" stackId="a" name="Mint GLP" fill={COLORS[1]} />
-          <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="burn" stackId="a" name="Burn GLP" fill={COLORS[2]} />
+          <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="mint" stackId="a" name="Mint ELP" fill={COLORS[1]} />
+          <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="burn" stackId="a" name="Burn ELP" fill={COLORS[2]} />
           <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="liquidation" stackId="a" name="Liquidation" fill={COLORS[3]} />
           <Bar unit={viewSettings.itemsUnit} isAnimationActive={false} type="monotone" dataKey="margin" stackId="a" name="Margin trading" fill={COLORS[4]} />
           <Line isAnimationActive={false} type="monotone" dot={false} strokeWidth={3} stroke={COLORS[12]} dataKey="cumulative" yAxisId="right" name="Cumulative" />

@@ -56,10 +56,10 @@ import {
   useTotalVolumeFromServer,
   useVolumeDataFromServer,
   useFeesData,
-  useGlpData,
+  useElpData,
   useAumPerformanceData,
   useCoingeckoPrices,
-  useGlpPerformanceData,
+  useElpPerformanceData,
   useTradersData,
   useSwapSources,
   useFundingRateData,
@@ -108,21 +108,21 @@ function Arbitrum(props) {
     return [total, delta]
   }, [totalFeesData])
 
-  const [glpData, glpLoading] = useGlpData(params)
+  const [elpData, elpLoading] = useElpData(params)
   const [totalAum, totalAumDelta] = useMemo(() => {
-    if (!glpData) {
+    if (!elpData) {
       return []
     }
-    const total = glpData[glpData.length - 1]?.aum
-    const delta = total - glpData[glpData.length - 2]?.aum
+    const total = elpData[elpData.length - 1]?.aum
+    const delta = total - elpData[elpData.length - 2]?.aum
     return [total, delta]
-  }, [glpData])
+  }, [elpData])
 
   const [aumPerformanceData, aumPerformanceLoading] = useAumPerformanceData(params)
-  const [glpPerformanceData, glpPerformanceLoading] = useGlpPerformanceData(glpData, feesData, params)
+  const [elpPerformanceData, elpPerformanceLoading] = useElpPerformanceData(elpData, feesData, params)
 
-  const [minCollectedFees, maxCollectedFees] = useChartDomain(glpPerformanceData, ["performanceLpBtcCollectedFees", "performanceLpEthCollectedFees", "performanceSyntheticCollectedFees"], [80, 180])
-  const [minGlpPrice, maxGlpPrice] = useChartDomain(glpPerformanceData, ["syntheticPrice", "glpPrice", "glpPlusFees", "lpBtcPrice", "lpEthPrice"], [0.4, 1.7])
+  const [minCollectedFees, maxCollectedFees] = useChartDomain(elpPerformanceData, ["performanceLpBtcCollectedFees", "performanceLpEthCollectedFees", "performanceSyntheticCollectedFees"], [80, 180])
+  const [minElpPrice, maxElpPrice] = useChartDomain(elpPerformanceData, ["syntheticPrice", "elpPrice", "elpPlusFees", "lpBtcPrice", "lpEthPrice"], [0.4, 1.7])
 
   const [tradersData, tradersLoading] = useTradersData(params)
   const [openInterest, openInterestDelta] = useMemo(() => {
@@ -232,12 +232,12 @@ function Arbitrum(props) {
         </div>
         <div className="chart-cell stats">
           {totalAum ? <>
-            <div className="total-stat-label">GLP Pool</div>
+            <div className="total-stat-label">ELP Pool</div>
             <div className="total-stat-value">
               {formatNumber(totalAum, { currency: true })}
               <span className={cx("total-stat-delta", (totalAumDelta > 0 ? 'plus' : 'minus'))} title="Change since previous day">{totalAumDelta > 0 ? '+' : ''}{formatNumber(totalAumDelta, { currency: true, compact: true })}</span>
             </div>
-          </> : (glpLoading ? <RiLoader5Fill size="3em" className="loader" /> : null)}
+          </> : (elpLoading ? <RiLoader5Fill size="3em" className="loader" /> : null)}
         </div>
         <div className="chart-cell stats">
           {totalUsers ? <>
@@ -280,12 +280,12 @@ function Arbitrum(props) {
           />
         </div>
         <div className="chart-cell">
-          <ChartWrapper title="AUM & Glp Supply" loading={glpLoading} data={glpData} csvFields={[{ key: 'aum' }, { key: 'glpSupply' }]}>
+          <ChartWrapper title="AUM & Elp Supply" loading={elpLoading} data={elpData} csvFields={[{ key: 'aum' }, { key: 'elpSupply' }]}>
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpData} syncId="syncGlp">
+              <LineChart data={elpData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
-                <YAxis dataKey="glpSupply" tickFormatter={yaxisFormatter} width={YAXIS_WIDTH} />
+                <YAxis dataKey="elpSupply" tickFormatter={yaxisFormatter} width={YAXIS_WIDTH} />
                 <Tooltip
                   formatter={tooltipFormatterNumber}
                   labelFormatter={tooltipLabelFormatter}
@@ -293,7 +293,7 @@ function Arbitrum(props) {
                 />
                 <Legend />
                 <Line isAnimationActive={false} type="monotone" strokeWidth={2} unit="$" dot={false} dataKey="aum" stackId="a" name="AUM" stroke={COLORS[0]} />
-                <Line isAnimationActive={false} type="monotone" strokeWidth={2} dot={false} dataKey="glpSupply" stackId="a" name="Glp Supply" stroke={COLORS[1]} />
+                <Line isAnimationActive={false} type="monotone" strokeWidth={2} dot={false} dataKey="elpSupply" stackId="a" name="Elp Supply" stroke={COLORS[1]} />
               </LineChart>
             </ResponsiveContainer>
           </ChartWrapper>
@@ -302,18 +302,18 @@ function Arbitrum(props) {
           <PoolAmountChart 
             from={from}
             to={to}
-            syncId="syncGlp"
+            syncId="syncElp"
           />
         </div>
         <div className="chart-cell">
           <ChartWrapper
-            title="Glp Performance"
-            loading={glpLoading}
-            data={glpPerformanceData}
+            title="Elp Performance"
+            loading={elpLoading}
+            data={elpPerformanceData}
             csvFields={[
               {key: 'syntheticPrice'},
-              {key: 'glpPrice'},
-              {key: 'glpPlusFees'},
+              {key: 'elpPrice'},
+              {key: 'elpPlusFees'},
               {key: 'lpBtcPrice'},
               {key: 'lpEthPrice'},
               {key: 'performanceSyntheticCollectedFees'},
@@ -328,7 +328,7 @@ function Arbitrum(props) {
             ]}
           >
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpPerformanceData} syncId="syncGlp">
+              <LineChart data={elpPerformanceData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
                 <YAxis dataKey="performanceSyntheticCollectedFees" domain={[minCollectedFees, maxCollectedFees]} unit="%" tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
@@ -345,22 +345,22 @@ function Arbitrum(props) {
             </ResponsiveContainer>
             <div className="chart-description">
               <p>
-                <span style={{color: COLORS[0]}}>% of Index (with fees)</span> is Glp with fees / Index Price * 100. Index is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
+                <span style={{color: COLORS[0]}}>% of Index (with fees)</span> is Elp with fees / Index Price * 100. Index is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
                 <br/>
-                <span style={{color: COLORS[4]}}>% of LP ETH-USDC (with fees)</span> is Glp Price with fees / LP ETH-USDC * 100<br/>
+                <span style={{color: COLORS[4]}}>% of LP ETH-USDC (with fees)</span> is Elp Price with fees / LP ETH-USDC * 100<br/>
               </p>
             </div>
           </ChartWrapper>
         </div>
         <div className="chart-cell">
           <ChartWrapper
-            title="Glp Price Comparison"
-            loading={glpLoading}
-            data={glpPerformanceData}
+            title="Elp Price Comparison"
+            loading={elpLoading}
+            data={elpPerformanceData}
             csvFields={[
               {key: 'syntheticPrice'},
-              {key: 'glpPrice'},
-              {key: 'glpPlusFees'},
+              {key: 'elpPrice'},
+              {key: 'elpPlusFees'},
               {key: 'lpBtcPrice'},
               {key: 'lpEthPrice'},
               {key: 'performanceSyntheticCollectedFees'},
@@ -375,10 +375,10 @@ function Arbitrum(props) {
             ]}
           >
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpPerformanceData} syncId="syncGlp">
+              <LineChart data={elpPerformanceData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
-                <YAxis dataKey="glpPrice" domain={[minGlpPrice, maxGlpPrice]} tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
+                <YAxis dataKey="elpPrice" domain={[minElpPrice, maxElpPrice]} tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
                 <Tooltip
                   formatter={tooltipFormatterNumber}
                   labelFormatter={tooltipLabelFormatter}
@@ -386,15 +386,15 @@ function Arbitrum(props) {
                 />
                 <Legend />
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="syntheticPrice" name="Index Price" stroke={COLORS[2]} />
-                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="glpPrice" name="Glp Price" stroke={COLORS[1]} />
-                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={2} dot={false} dataKey="glpPlusFees" name="Glp w/ fees" stroke={COLORS[3]} />
+                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="elpPrice" name="Elp Price" stroke={COLORS[1]} />
+                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={2} dot={false} dataKey="elpPlusFees" name="Elp w/ fees" stroke={COLORS[3]} />
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="lpBtcPrice" name="LP BTC-USDC" stroke={COLORS[2]} />
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="lpEthPrice" name="LP ETH-USDC" stroke={COLORS[4]} />
               </LineChart>
             </ResponsiveContainer>
             <div className="chart-description">
               <p>
-                <span style={{color: COLORS[3]}}>Glp with fees</span> is based on GLP share of fees received and excluding esGMX rewards<br/>
+                <span style={{color: COLORS[3]}}>Elp with fees</span> is based on ELP share of fees received and excluding esEDDX rewards<br/>
                 <span style={{color: COLORS[2]}}>Index Price</span> is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
 
               </p>
@@ -402,9 +402,9 @@ function Arbitrum(props) {
           </ChartWrapper>
         </div>
         {isExperiment && <div className="chart-cell experiment">
-          <ChartWrapper title="Performance vs. Index" loading={glpLoading}>
+          <ChartWrapper title="Performance vs. Index" loading={elpLoading}>
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpPerformanceData} syncId="syncGlp">
+              <LineChart data={elpPerformanceData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
                 <YAxis dataKey="performanceSyntheticCollectedFees" domain={[80, 120]} unit="%" tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
@@ -423,9 +423,9 @@ function Arbitrum(props) {
           </ChartWrapper>
         </div>}
         {isExperiment && <div className="chart-cell experiment">
-          <ChartWrapper title="Performance vs. ETH LP" loading={glpLoading}>
+          <ChartWrapper title="Performance vs. ETH LP" loading={elpLoading}>
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpPerformanceData} syncId="syncGlp">
+              <LineChart data={elpPerformanceData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
                 <YAxis dataKey="performanceLpEthCollectedFees" domain={[80, 120]} unit="%" tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
@@ -528,7 +528,7 @@ function Arbitrum(props) {
         </div>
         <div className="chart-cell">
            <GenericChart
-              syncId="syncGlp"
+              syncId="syncElp"
               loading={aumPerformanceLoading}
               title="AUM Performance Annualized"
               data={aumPerformanceData}
@@ -536,13 +536,13 @@ function Arbitrum(props) {
               yaxisTickFormatter={yaxisFormatterPercent}
               tooltipFormatter={tooltipFormatterPercent}
               items={[{ key: 'apr', name: 'APR', color: COLORS[0] }]}
-              description="Formula = Daily Fees / GLP Pool * 365 days * 100"
+              description="Formula = Daily Fees / ELP Pool * 365 days * 100"
               type="Composed"
             />
         </div>
         <div className="chart-cell">
           <GenericChart
-            syncId="syncGlp"
+            syncId="syncElp"
             loading={aumPerformanceLoading}
             title="AUM Daily Usage"
             data={aumPerformanceData}
@@ -550,13 +550,13 @@ function Arbitrum(props) {
             yaxisTickFormatter={yaxisFormatterPercent}
             tooltipFormatter={tooltipFormatterPercent}
             items={[{ key: 'usage', name: 'Daily Usage', color: COLORS[4] }]}
-            description="Formula = Daily Volume / GLP Pool * 100"
+            description="Formula = Daily Volume / ELP Pool * 100"
             type="Composed"
           />
         </div>
         <div className="chart-cell">
           <GenericChart
-            syncId="syncGlp"
+            syncId="syncElp"
             loading={usersLoading}
             title="Unique Users"
             data={usersData}
@@ -568,14 +568,14 @@ function Arbitrum(props) {
             items={[
               { key: 'uniqueSwapCount', name: 'Swaps' },
               { key: 'uniqueMarginCount', name: 'Margin trading' },
-              { key: 'uniqueMintBurnCount', name: 'Mint & Burn GLP' }
+              { key: 'uniqueMintBurnCount', name: 'Mint & Burn ELP' }
             ]}
             type="Composed"
           />
         </div>
         <div className="chart-cell">
           <GenericChart
-            syncId="syncGlp"
+            syncId="syncElp"
             loading={usersLoading}
             title="New Users"
             data={usersData?.map(item => ({ ...item, all: item.newCount }))}
@@ -596,7 +596,7 @@ function Arbitrum(props) {
         </div>
         <div className="chart-cell">
            <GenericChart
-              syncId="syncGlp"
+              syncId="syncElp"
               loading={usersLoading}
               title="New vs. Existing Users"
               data={usersData?.map(item => ({ ...item, all: item.uniqueCount }))}
@@ -616,7 +616,7 @@ function Arbitrum(props) {
         </div>
         <div className="chart-cell">
           <GenericChart
-            syncId="syncGlp"
+            syncId="syncElp"
             loading={usersLoading}
             title="User Actions"
             data={(usersData || []).map(item => ({ ...item, all: item.actionCount }))}
@@ -625,7 +625,7 @@ function Arbitrum(props) {
             yaxisTickFormatter={yaxisFormatterNumber}
             tooltipFormatter={tooltipFormatterNumber}
             tooltipLabelFormatter={tooltipLabelFormatterUnits}
-            items={[{ key: 'actionSwapCount', name: 'Swaps' }, { key: 'actionMarginCount', name: 'Margin trading' }, { key: 'actionMintBurnCount', name: 'Mint & Burn GLP' }]}
+            items={[{ key: 'actionSwapCount', name: 'Swaps' }, { key: 'actionMarginCount', name: 'Margin trading' }, { key: 'actionMintBurnCount', name: 'Mint & Burn ELP' }]}
             type="Composed"
           />
         </div>

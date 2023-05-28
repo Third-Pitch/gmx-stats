@@ -45,8 +45,8 @@ import DateRangeSelect from '../components/DateRangeSelect'
 import {
   useVolumeData,
   useFeesData,
-  useGlpData,
-  useGlpPerformanceData,
+  useElpData,
+  useElpPerformanceData,
   useTradersData,
   useSwapSources,
   useFundingRateData,
@@ -98,22 +98,22 @@ function Avalanche(props) {
     return [total, delta]
   }, [totalFeesData])
 
-  const [glpData, glpLoading] = useGlpData(params)
-  const [totalGlpData, totalGlpLoading] = useGlpData({ chainName: 'avalanche' })
+  const [elpData, elpLoading] = useElpData(params)
+  const [totalElpData, totalElpLoading] = useElpData({ chainName: 'avalanche' })
   const [totalAum, totalAumDelta] = useMemo(() => {
-    if (!totalGlpData) {
+    if (!totalElpData) {
       return []
     }
-    const total = totalGlpData[totalGlpData.length - 1]?.aum
-    const delta = total - totalGlpData[totalGlpData.length - 2]?.aum
+    const total = totalElpData[totalElpData.length - 1]?.aum
+    const delta = total - totalElpData[totalElpData.length - 2]?.aum
     return [total, delta]
-  }, [totalGlpData])
+  }, [totalElpData])
 
   // const [aumPerformanceData, aumPerformanceLoading] = useAumPerformanceData(params)
-  const [glpPerformanceData, glpPerformanceLoading] = useGlpPerformanceData(glpData, feesData, params)
+  const [elpPerformanceData, elpPerformanceLoading] = useElpPerformanceData(elpData, feesData, params)
 
-  const [minCollectedFees, maxCollectedFees] = useChartDomain(glpPerformanceData, ["performanceLpBtcCollectedFees", "performanceLpEthCollectedFees", "performanceLpAvaxCollectedFees", "performanceSyntheticCollectedFees"], [80, 180])
-  const [minGlpPrice, maxGlpPrice] = useChartDomain(glpPerformanceData, ["syntheticPrice", "glpPrice", "glpPlusFees", "lpBtcPrice", "lpEthPrice", "lpAvaxPrice"], [0.4, 1.7])
+  const [minCollectedFees, maxCollectedFees] = useChartDomain(elpPerformanceData, ["performanceLpBtcCollectedFees", "performanceLpEthCollectedFees", "performanceLpAvaxCollectedFees", "performanceSyntheticCollectedFees"], [80, 180])
+  const [minElpPrice, maxElpPrice] = useChartDomain(elpPerformanceData, ["syntheticPrice", "elpPrice", "elpPlusFees", "lpBtcPrice", "lpEthPrice", "lpAvaxPrice"], [0.4, 1.7])
 
   const [tradersData, tradersLoading] = useTradersData(params)
   const [totalTradersData, totalTradersLoading] = useTradersData({ chainName: 'avalanche' })
@@ -225,7 +225,7 @@ function Avalanche(props) {
         </div>
         <div className="chart-cell stats">
           {totalAum ? <>
-            <div className="total-stat-label">GLP Pool</div>
+            <div className="total-stat-label">ELP Pool</div>
             <div className="total-stat-value">
               {formatNumber(totalAum, { currency: true })}
               {!!totalAumDelta &&
@@ -233,7 +233,7 @@ function Avalanche(props) {
               }
             </div>
           </> : null}
-          {totalGlpLoading && <RiLoader5Fill size="3em" className="loader" />}
+          {totalElpLoading && <RiLoader5Fill size="3em" className="loader" />}
         </div>
         <div className="chart-cell stats">
           {totalUsers && <>
@@ -280,12 +280,12 @@ function Avalanche(props) {
           />
         </div>
         <div className="chart-cell">
-          <ChartWrapper title="AUM & Glp Supply" loading={glpLoading} data={glpData} csvFields={[{ key: 'aum' }, { key: 'glpSupply' }]}>
+          <ChartWrapper title="AUM & Elp Supply" loading={elpLoading} data={elpData} csvFields={[{ key: 'aum' }, { key: 'elpSupply' }]}>
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpData} syncId="syncGlp">
+              <LineChart data={elpData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
-                <YAxis dataKey="glpSupply" tickFormatter={yaxisFormatter} width={YAXIS_WIDTH} />
+                <YAxis dataKey="elpSupply" tickFormatter={yaxisFormatter} width={YAXIS_WIDTH} />
                 <Tooltip
                   formatter={tooltipFormatterNumber}
                   labelFormatter={tooltipLabelFormatter}
@@ -293,7 +293,7 @@ function Avalanche(props) {
                 />
                 <Legend />
                 <Line isAnimationActive={false} type="monotone" strokeWidth={2} unit="$" dot={false} dataKey="aum" stackId="a" name="AUM" stroke={COLORS[0]} />
-                <Line isAnimationActive={false} type="monotone" strokeWidth={2} dot={false} dataKey="glpSupply" stackId="a" name="Glp Supply" stroke={COLORS[1]} />
+                <Line isAnimationActive={false} type="monotone" strokeWidth={2} dot={false} dataKey="elpSupply" stackId="a" name="Elp Supply" stroke={COLORS[1]} />
               </LineChart>
             </ResponsiveContainer>
           </ChartWrapper>
@@ -303,18 +303,18 @@ function Avalanche(props) {
             from={from}
             to={to}
             chainName={params.chainName}
-            syncId="syncGlp"
+            syncId="syncElp"
           />
         </div>
         <div className="chart-cell">
           <ChartWrapper
-            title="Glp Performance"
-            loading={glpLoading}
-            data={glpPerformanceData}
-            csvFields={[{key: 'syntheticPrice'}, {key: 'glpPrice'}, {key: 'glpPlusFees'}, {key: 'lpBtcPrice'}, {key: 'lpEthPrice'}]}
+            title="Elp Performance"
+            loading={elpLoading}
+            data={elpPerformanceData}
+            csvFields={[{key: 'syntheticPrice'}, {key: 'elpPrice'}, {key: 'elpPlusFees'}, {key: 'lpBtcPrice'}, {key: 'lpEthPrice'}]}
           >
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpPerformanceData} syncId="syncGlp">
+              <LineChart data={elpPerformanceData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
                 <YAxis dataKey="performanceLpAvaxCollectedFees" domain={[minCollectedFees, maxCollectedFees]} unit="%" tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
@@ -332,25 +332,25 @@ function Avalanche(props) {
             </ResponsiveContainer>
             <div className="chart-description">
               <p>
-                <span style={{color: COLORS[0]}}>% of Index</span> is Glp with fees / Index Price * 100. Index is a basket 16.6% AVAX, 16.6% BTC, 16.6% ETH and 50% USDC rebalanced once&nbsp;a&nbsp;day
+                <span style={{color: COLORS[0]}}>% of Index</span> is Elp with fees / Index Price * 100. Index is a basket 16.6% AVAX, 16.6% BTC, 16.6% ETH and 50% USDC rebalanced once&nbsp;a&nbsp;day
                   <br/>
-                <span style={{color: COLORS[4]}}>% of LP TOKEN-USDC</span> is Glp Price with fees / LP TOKEN-USDC * 100<br/>
+                <span style={{color: COLORS[4]}}>% of LP TOKEN-USDC</span> is Elp Price with fees / LP TOKEN-USDC * 100<br/>
               </p>
             </div>
           </ChartWrapper>
         </div>
         <div className="chart-cell">
           <ChartWrapper
-            title="Glp Price Comparison"
-            loading={glpLoading}
-            data={glpPerformanceData}
-            csvFields={[{ key: 'syntheticPrice' }, { key: 'glpPrice' }, { key: 'glpPlusFees' }, { key: 'lpBtcPrice' }, { key: 'lpEthPrice' }]}
+            title="Elp Price Comparison"
+            loading={elpLoading}
+            data={elpPerformanceData}
+            csvFields={[{ key: 'syntheticPrice' }, { key: 'elpPrice' }, { key: 'elpPlusFees' }, { key: 'lpBtcPrice' }, { key: 'lpEthPrice' }]}
           >
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-              <LineChart data={glpPerformanceData} syncId="syncGlp">
+              <LineChart data={elpPerformanceData} syncId="syncElp">
                 <CartesianGrid strokeDasharray="10 10" />
                 <XAxis dataKey="timestamp" tickFormatter={tooltipLabelFormatter} minTickGap={30} />
-                <YAxis dataKey="glpPrice" domain={[minGlpPrice, maxGlpPrice]} tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
+                <YAxis dataKey="elpPrice" domain={[minElpPrice, maxElpPrice]} tickFormatter={yaxisFormatterNumber} width={YAXIS_WIDTH} />
                 <Tooltip
                   formatter={tooltipFormatterNumber}
                   labelFormatter={tooltipLabelFormatter}
@@ -359,8 +359,8 @@ function Avalanche(props) {
                 <Legend />
 
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="syntheticPrice" name="Index Price" stroke={COLORS[2]} />
-                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="glpPrice" name="Glp Price" stroke={COLORS[1]} />
-                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={2} dot={false} dataKey="glpPlusFees" name="Glp w/ fees" stroke={COLORS[3]} />
+                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="elpPrice" name="Elp Price" stroke={COLORS[1]} />
+                <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={2} dot={false} dataKey="elpPlusFees" name="Elp w/ fees" stroke={COLORS[3]} />
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="lpBtcPrice" name="LP BTC-USDC" stroke={COLORS[2]} />
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="lpEthPrice" name="LP ETH-USDC" stroke={COLORS[4]} />
                 <Line isAnimationActive={false} type="monotone" unit="$" strokeWidth={1} dot={false} dataKey="lpAvaxPrice" name="LP AVAX-USDC" stroke={COLORS[5]} />
@@ -368,7 +368,7 @@ function Avalanche(props) {
             </ResponsiveContainer>
             <div className="chart-description">
               <p>
-                <span style={{color: COLORS[3]}}>Glp with fees</span> is based on GLP share of fees received and excluding esGMX rewards<br/>
+                <span style={{color: COLORS[3]}}>Elp with fees</span> is based on ELP share of fees received and excluding esEDDX rewards<br/>
                 <span style={{color: COLORS[2]}}>Index Price</span> is a basket 16.6% AVAX, 16.6% BTC, 16.6% ETH and 50% USDC rebalanced once&nbsp;a&nbsp;day
               </p>
             </div>
@@ -458,7 +458,7 @@ function Avalanche(props) {
         </div>
         <div className="chart-cell">
            <GenericChart
-              syncId="syncGlp"
+              syncId="syncElp"
               loading={usersLoading}
               title="Unique Users"
               data={usersData}
@@ -470,14 +470,14 @@ function Avalanche(props) {
               items={[
                 { key: 'uniqueSwapCount', name: 'Swaps'},
                 { key: 'uniqueMarginCount', name: 'Margin trading'},
-                { key: 'uniqueMintBurnCount', name: 'Mint & Burn GLP' }
+                { key: 'uniqueMintBurnCount', name: 'Mint & Burn ELP' }
               ]}
               type="Composed"
             />
         </div>
         <div className="chart-cell">
           <GenericChart
-            syncId="syncGlp"
+            syncId="syncElp"
             loading={usersLoading}
             title="New Users"
             data={usersData?.map(item => ({ ...item, all: item.newCount }))}
