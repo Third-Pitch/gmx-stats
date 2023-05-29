@@ -5,19 +5,20 @@ import fetch from 'cross-fetch';
 import * as ethers from 'ethers'
 
 import { fillPeriods } from './helpers'
-import { addresses, getAddress, ARBITRUM, AVALANCHE } from './addresses'
+import { addresses, getAddress, ARBITRUM, AVALANCHE, BASE} from './addresses'
 
 const BigNumber = ethers.BigNumber
 const formatUnits = ethers.utils.formatUnits
 const { JsonRpcProvider } = ethers.providers
 
 import RewardReader from '../abis/RewardReader.json'
-import ElpManager from '../abis/GlpManager.json'
+import ElpManager from '../abis/ElpManager.json'
 import Token from '../abis/v1/Token.json'
 
 const providers = {
   arbitrum: new JsonRpcProvider('https://arb1.arbitrum.io/rpc'),
-  avalanche: new JsonRpcProvider('https://api.avax.network/ext/bc/C/rpc')
+  avalanche: new JsonRpcProvider('https://api.avax.network/ext/bc/C/rpc'),
+  base: new JsonRpcProvider('https://goerli.base.org')
 }
 
 function getProvider(chainName) {
@@ -30,7 +31,8 @@ function getProvider(chainName) {
 function getChainId(chainName) {
   const chainId = {
     arbitrum: ARBITRUM,
-    avalanche: AVALANCHE
+    avalanche: AVALANCHE,
+    base: BASE
   }[chainName]
   if (!chainId) {
     throw new Error(`Unknown chain ${chainName}`)
@@ -76,13 +78,47 @@ export async function queryEarnData(chainName, account) {
   let rewardTrackersForStakingInfo
 
   if (chainId === ARBITRUM) {
-    depositTokens = ['0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a', '0xf42Ae1D54fd613C9bb14810b0588FaAa09a426cA', '0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x4d268a7d4C16ceB5a606c173Bd974984343fea13', '0x35247165119B69A40edD5304969560D0ef486921', '0x4277f8F2c384827B5273592FF7CeBd9f2C1ac258']
-    rewardTrackersForDepositBalances = ['0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x4d268a7d4C16ceB5a606c173Bd974984343fea13', '0xd2D1162512F927a7e282Ef43a362659E4F2a728F', '0xd2D1162512F927a7e282Ef43a362659E4F2a728F', '0x4e971a87900b931fF39d1Aad67697F49835400b6']
-    rewardTrackersForStakingInfo = ['0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x4d268a7d4C16ceB5a606c173Bd974984343fea13', '0xd2D1162512F927a7e282Ef43a362659E4F2a728F', '0x1aDDD80E6039594eE970E5872D247bf0414C8903', '0x4e971a87900b931fF39d1Aad67697F49835400b6']
+    depositTokens = [
+      '0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a',
+      '0xf42Ae1D54fd613C9bb14810b0588FaAa09a426cA',
+      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
+      '0x4d268a7d4C16ceB5a606c173Bd974984343fea13',
+      '0x35247165119B69A40edD5304969560D0ef486921',
+      '0x4277f8F2c384827B5273592FF7CeBd9f2C1ac258']
+    rewardTrackersForDepositBalances = [
+      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
+      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
+      '0x4d268a7d4C16ceB5a606c173Bd974984343fea13',
+      '0xd2D1162512F927a7e282Ef43a362659E4F2a728F',
+      '0xd2D1162512F927a7e282Ef43a362659E4F2a728F',
+      '0x4e971a87900b931fF39d1Aad67697F49835400b6']
+    rewardTrackersForStakingInfo = [
+      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
+      '0x4d268a7d4C16ceB5a606c173Bd974984343fea13',
+      '0xd2D1162512F927a7e282Ef43a362659E4F2a728F',
+      '0x1aDDD80E6039594eE970E5872D247bf0414C8903',
+      '0x4e971a87900b931fF39d1Aad67697F49835400b6']
   } else {
-    depositTokens = ['0x62edc0692BD897D2295872a9FFCac5425011c661', '0xFf1489227BbAAC61a9209A08929E4c2a526DdD17', '0x2bD10f8E93B3669b6d42E74eEedC65dd1B0a1342', '0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x8087a341D32D445d9aC8aCc9c14F5781E04A26d2', '0x01234181085565ed162a948b6a5e88758CD7c7b8']
-    rewardTrackersForDepositBalances = ['0x2bD10f8E93B3669b6d42E74eEedC65dd1B0a1342', '0x2bD10f8E93B3669b6d42E74eEedC65dd1B0a1342', '0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x4d268a7d4C16ceB5a606c173Bd974984343fea13', '0x4d268a7d4C16ceB5a606c173Bd974984343fea13', '0xd2D1162512F927a7e282Ef43a362659E4F2a728F']
-    rewardTrackersForStakingInfo = ['0x2bD10f8E93B3669b6d42E74eEedC65dd1B0a1342', '0x908C4D94D34924765f1eDc22A1DD098397c59dD4', '0x4d268a7d4C16ceB5a606c173Bd974984343fea13', '0x9e295B5B976a184B14aD8cd72413aD846C299660', '0xd2D1162512F927a7e282Ef43a362659E4F2a728F']
+    depositTokens = [
+      '0x24B63ae170152FcCF6a11Cd77ffa2D7F04ed999D',// EDDX
+      '0x2DF1E0dBEC080a3Db97a19Cf955b9589EE511cfd',// esEDDX
+      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',// stakedEddxTracker sEDDX
+      '0xb7D4fC3aea728bE1417412953f6CeC34714758FF', //bonusEddxTracker sbEDDX
+      '0xcE3929B081c1924c936dE2AB47E7e093F985f266', //bnEDDX
+      '0x897Cc73723966a0648E99281986eeff71313E95F'] //ELP
+    rewardTrackersForDepositBalances = [
+      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',//stakedEddxTracker
+      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',//stakedEddxTracker
+      '0xb7D4fC3aea728bE1417412953f6CeC34714758FF',//bonusEddxTracker
+      '0xBbC8a48fed0e6996f16C24ebb575218D307ead2c',// feeEddxTracker
+      '0xBbC8a48fed0e6996f16C24ebb575218D307ead2c',// feeEddxTracker
+      '0xb6a113eCCBa6FEb6169E78CB8209872e50dE2254']//feeElpTracker
+    rewardTrackersForStakingInfo = [
+      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',//stakedEddxTracker
+      '0xb7D4fC3aea728bE1417412953f6CeC34714758FF',//bonusEddxTracker
+      '0xBbC8a48fed0e6996f16C24ebb575218D307ead2c',// feeEddxTracker
+      '0xfB25503367B83D2b430CD3eC7e4FE36052a86e04',//stakedElpTracker
+      '0xb6a113eCCBa6FEb6169E78CB8209872e50dE2254']//feeElpTracker
   }
 
   const [
@@ -129,36 +165,22 @@ export async function queryEarnData(chainName, account) {
 }
 
 export const tokenDecimals = {
-  "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": 18, // WETH
-  "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f": 8, // BTC
-  "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8": 6, // USDC
-  "0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0": 18, // UNI
-  "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9": 6, // USDT
-  "0xf97f4df75117a78c1a5a0dbb814af92458539fb4": 18, // LINK
-  "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a": 18, // MIM
-  "0x17fc002b466eec40dae837fc4be5c67993ddbd6f": 18, // FRAX
-  "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1": 18, // DAI
+  "0x4200000000000000000000000000000000000006": 18, // WETH
+  "0x1AcF131de5Bbc72aE96eE5EC7b59dA2f38b19DBd": 18, // BTC
+  "0xEcb03BBCF83E863B9053A926932DbB07D837eBbE": 18, // USDC
+  "0x8654F060EB1e5533C259cDcBBe39834Bb8141cF4": 18, // USDT
+  "0x63bA205dA17003AB46CE0dd78bE8ba8EE3952e5F": 18, // LINK
+  "0xFE9cdCC77fb826B380D49F53c8cE298B600cB7F0": 18, // DAI
 }
 
 export const tokenSymbols = {
   // Arbitrum
-  '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': 'BTC',
-  '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': 'ETH',
-  '0xf97f4df75117a78c1a5a0dbb814af92458539fb4': 'LINK',
-  '0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0': 'UNI',
-  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': 'USDC',
-  '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': 'USDT',
-  '0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a': 'MIM',
-  '0x17fc002b466eec40dae837fc4be5c67993ddbd6f': 'FRAX',
-  '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': 'DAI',
-
-  // Avalanche
-  '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7': 'AVAX',
-  '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab': 'WETH.e',
-  '0x50b7545627a5162f82a992c33b87adc75187b218': 'WBTC.e',
-  '0x130966628846bfd36ff31a822705796e8cb8c18d': 'MIM',
-  '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664': 'USDC.e',
-  '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e': 'USDC'
+  '0x1AcF131de5Bbc72aE96eE5EC7b59dA2f38b19DBd': 'BTC',
+  '0x4200000000000000000000000000000000000006': 'ETH',
+  '0x63bA205dA17003AB46CE0dd78bE8ba8EE3952e5F': 'LINK',
+  '0xEcb03BBCF83E863B9053A926932DbB07D837eBbE': 'USDC',
+  '0x8654F060EB1e5533C259cDcBBe39834Bb8141cF4': 'USDT',
+  '0xFE9cdCC77fb826B380D49F53c8cE298B600cB7F0': 'DAI',
 }
 
 function getTokenDecimals(token) {
@@ -176,6 +198,28 @@ const knownSwapSources = {
     '0x7257ac5d0a0aac04aa7ba2ac0a6eb742e332c3fb': 'EDDX OrderExecutor', // OrderExecutor
     '0x1a0ad27350cccd6f7f168e052100b4960efdb774': 'EDDX FastPriceFeed A', // FastPriceFeed
     '0x11d62807dae812a0f1571243460bf94325f43bb7': 'EDDX PositionExecutor', // Position Executor
+    '0x3b6067d4caa8a14c63fdbe6318f27a0bbc9f9237': 'Dodo',
+    '0x11111112542d85b3ef69ae05771c2dccff4faa26': '1inch',
+    '0x6352a56caadc4f1e25cd6c75970fa768a3304e64': 'OpenOcean', // OpenOceanExchangeProxy
+    '0x4775af8fef4809fe10bf05867d2b038a4b5b2146': 'Gelato',
+    '0x5a9fd7c39a6c488e715437d7b1f3c823d5596ed1': 'LiFiDiamond',
+    '0x1d838be5d58cc131ae4a23359bc6ad2dddb8b75a': 'Vovo', // Vovo BTC UP USDC (vbuUSDC)
+    '0xc4bed5eeeccbe84780c44c5472e800d3a5053454': 'Vovo', // Vovo ETH UP USDC (veuUSDC)
+    '0xe40beb54ba00838abe076f6448b27528dd45e4f0': 'Vovo', // Vovo BTC UP USDC (vbuUSDC)
+    '0x9ba57a1d3f6c61ff500f598f16b97007eb02e346': 'Vovo', // Vovo ETH UP USDC (veuUSDC)
+    '0xfa82f1ba00b0697227e2ad6c668abb4c50ca0b1f': 'JonesDAO',
+    '0x226cb17a52709034e2ec6abe0d2f0a9ebcec1059': 'WardenSwap',
+    '0x1111111254fb6c44bac0bed2854e76f90643097d': '1inch',
+    '0x6d7a3177f3500bea64914642a49d0b5c0a7dae6d': 'deBridge',
+    '0xc30141b657f4216252dc59af2e7cdb9d8792e1b0': 'socket.tech',
+    '0xdd94018f54e565dbfc939f7c44a16e163faab331': 'Odos Router'
+  },
+  base: {
+    '0xf925098c0fb905D7256a61FfA388940f8E8Be853': 'EDDX Router', // Router
+    '0x9Aee9917A0E7D6fCe32751D7F93e9fB1658dD16D': 'EDDX OrderBook', // Orderbook
+    '0x8475Fbe5BcCF02c66c386dD8AAf251005e4b0cC8': 'EDDX PositionManager', // PositionManager old
+    '0x43Ba508844BAB522Fe17d3a063316C52f57463e8': 'EDDX OrderExecutor', // OrderExecutor
+    '0x1aC4d5F83ef11bEA355bAad28AfeA0EF50250aaC': 'EDDX FastPriceFeed A', // FastPriceFeed
     '0x3b6067d4caa8a14c63fdbe6318f27a0bbc9f9237': 'Dodo',
     '0x11111112542d85b3ef69ae05771c2dccff4faa26': '1inch',
     '0x6352a56caadc4f1e25cd6c75970fa768a3304e64': 'OpenOcean', // OpenOceanExchangeProxy
