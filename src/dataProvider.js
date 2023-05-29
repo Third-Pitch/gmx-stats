@@ -589,7 +589,7 @@ export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
 }
 
 export function useTotalVolumeFromServer() {
-  const [data, loading] = useRequest('https://eddx-server-mainnet.uw.r.appspot.com/total_volume')
+  const [data, loading] = useRequest('http://127.0.0.1:3123/total_volume')
   return useMemo(() => {
     if (!data) {
       return [data, loading]
