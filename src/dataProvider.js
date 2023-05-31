@@ -102,23 +102,23 @@ export async function queryEarnData(chainName, account) {
     depositTokens = [
       '0x24B63ae170152FcCF6a11Cd77ffa2D7F04ed999D',// EDDX
       '0x2DF1E0dBEC080a3Db97a19Cf955b9589EE511cfd',// esEDDX
-      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',// stakedEddxTracker sEDDX
-      '0xb7D4fC3aea728bE1417412953f6CeC34714758FF', //bonusEddxTracker sbEDDX
+      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',// stakedEddxTracker sEDDX
+      '0x67798B0f94378528318a5739C2d17a4652cF9A1A', //bonusEddxTracker sbEDDX
       '0xcE3929B081c1924c936dE2AB47E7e093F985f266', //bnEDDX
       '0x897Cc73723966a0648E99281986eeff71313E95F'] //ELP
     rewardTrackersForDepositBalances = [
-      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',//stakedEddxTracker
-      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',//stakedEddxTracker
-      '0xb7D4fC3aea728bE1417412953f6CeC34714758FF',//bonusEddxTracker
-      '0xBbC8a48fed0e6996f16C24ebb575218D307ead2c',// feeEddxTracker
-      '0xBbC8a48fed0e6996f16C24ebb575218D307ead2c',// feeEddxTracker
-      '0xb6a113eCCBa6FEb6169E78CB8209872e50dE2254']//feeElpTracker
+      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
+      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
+      '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
+      '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
+      '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
+      '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
     rewardTrackersForStakingInfo = [
-      '0x6b6452BDcb802FAD0AF751E0b39b44B62Dc5DAE6',//stakedEddxTracker
-      '0xb7D4fC3aea728bE1417412953f6CeC34714758FF',//bonusEddxTracker
-      '0xBbC8a48fed0e6996f16C24ebb575218D307ead2c',// feeEddxTracker
-      '0xfB25503367B83D2b430CD3eC7e4FE36052a86e04',//stakedElpTracker
-      '0xb6a113eCCBa6FEb6169E78CB8209872e50dE2254']//feeElpTracker
+      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
+      '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
+      '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
+      '0x357C8A51981237bF34759871B9a62993A77E634A',//stakedElpTracker
+      '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
   }
 
   const [
@@ -589,7 +589,7 @@ export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
 }
 
 export function useTotalVolumeFromServer() {
-  const [data, loading] = useRequest('http://127.0.0.1:3123/total_volume')
+  const [data, loading] = useRequest('http://127.0.0.1:3123/api/total_volume')
   return useMemo(() => {
     if (!data) {
       return [data, loading]
