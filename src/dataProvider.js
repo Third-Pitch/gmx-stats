@@ -4,8 +4,7 @@ import { chain, sumBy, sortBy, maxBy, minBy } from 'lodash'
 import fetch from 'cross-fetch';
 import * as ethers from 'ethers'
 
-import { fillPeriods } from './helpers'
-import { addresses, getAddress, ARBITRUM, AVALANCHE, BASE} from './addresses'
+import { getAddress, BASE } from './addresses'
 
 const BigNumber = ethers.BigNumber
 const formatUnits = ethers.utils.formatUnits
@@ -14,6 +13,7 @@ const { JsonRpcProvider } = ethers.providers
 import RewardReader from '../abis/RewardReader.json'
 import ElpManager from '../abis/ElpManager.json'
 import Token from '../abis/v1/Token.json'
+import axios from 'axios';
 
 const providers = {
   arbitrum: new JsonRpcProvider('https://arb1.arbitrum.io/rpc'),
@@ -30,8 +30,6 @@ function getProvider(chainName) {
 
 function getChainId(chainName) {
   const chainId = {
-    arbitrum: ARBITRUM,
-    avalanche: AVALANCHE,
     base: BASE
   }[chainName]
   if (!chainId) {
@@ -77,49 +75,27 @@ export async function queryEarnData(chainName, account) {
   let rewardTrackersForDepositBalances
   let rewardTrackersForStakingInfo
 
-  if (chainId === ARBITRUM) {
-    depositTokens = [
-      '0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a',
-      '0xf42Ae1D54fd613C9bb14810b0588FaAa09a426cA',
-      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
-      '0x4d268a7d4C16ceB5a606c173Bd974984343fea13',
-      '0x35247165119B69A40edD5304969560D0ef486921',
-      '0x4277f8F2c384827B5273592FF7CeBd9f2C1ac258']
-    rewardTrackersForDepositBalances = [
-      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
-      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
-      '0x4d268a7d4C16ceB5a606c173Bd974984343fea13',
-      '0xd2D1162512F927a7e282Ef43a362659E4F2a728F',
-      '0xd2D1162512F927a7e282Ef43a362659E4F2a728F',
-      '0x4e971a87900b931fF39d1Aad67697F49835400b6']
-    rewardTrackersForStakingInfo = [
-      '0x908C4D94D34924765f1eDc22A1DD098397c59dD4',
-      '0x4d268a7d4C16ceB5a606c173Bd974984343fea13',
-      '0xd2D1162512F927a7e282Ef43a362659E4F2a728F',
-      '0x1aDDD80E6039594eE970E5872D247bf0414C8903',
-      '0x4e971a87900b931fF39d1Aad67697F49835400b6']
-  } else {
-    depositTokens = [
-      '0x24B63ae170152FcCF6a11Cd77ffa2D7F04ed999D',// EDDX
-      '0x2DF1E0dBEC080a3Db97a19Cf955b9589EE511cfd',// esEDDX
-      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',// stakedEddxTracker sEDDX
-      '0x67798B0f94378528318a5739C2d17a4652cF9A1A', //bonusEddxTracker sbEDDX
-      '0xcE3929B081c1924c936dE2AB47E7e093F985f266', //bnEDDX
-      '0x897Cc73723966a0648E99281986eeff71313E95F'] //ELP
-    rewardTrackersForDepositBalances = [
-      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
-      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
-      '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
-      '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
-      '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
-      '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
-    rewardTrackersForStakingInfo = [
-      '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
-      '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
-      '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
-      '0x357C8A51981237bF34759871B9a62993A77E634A',//stakedElpTracker
-      '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
-  }
+
+  depositTokens = [
+    '0x24B63ae170152FcCF6a11Cd77ffa2D7F04ed999D',// EDDX
+    '0x2DF1E0dBEC080a3Db97a19Cf955b9589EE511cfd',// esEDDX
+    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',// stakedEddxTracker sEDDX
+    '0x67798B0f94378528318a5739C2d17a4652cF9A1A', //bonusEddxTracker sbEDDX
+    '0xcE3929B081c1924c936dE2AB47E7e093F985f266', //bnEDDX
+    '0x897Cc73723966a0648E99281986eeff71313E95F'] //ELP
+  rewardTrackersForDepositBalances = [
+    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
+    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
+    '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
+    '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
+    '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
+    '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
+  rewardTrackersForStakingInfo = [
+    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
+    '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
+    '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
+    '0x357C8A51981237bF34759871B9a62993A77E634A',//stakedElpTracker
+    '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
 
   const [
     balances,
@@ -329,7 +305,7 @@ export function useGraph(querySource, { subgraph = null, subgraphUrl = null, cha
     if (!subgraph) {
       subgraph = getChainSubgraph(chainName)
     }
-    subgraphUrl = `https://api.thegraph.com/subgraphs/name/${subgraph}`;
+    subgraphUrl = "/api/test/proxy/45535/test-stats/version/latest" //`https://api.thegraph.com/subgraphs/name/${subgraph}`;
   }
 
   const client = new ApolloClient({
@@ -345,14 +321,25 @@ export function useGraph(querySource, { subgraph = null, subgraphUrl = null, cha
   }, [querySource, setLoading])
 
   useEffect(() => {
-    client.query({query}).then(res => {
-      setData(res.data)
+    console.log(3333, querySource)
+    axios.post("http://127.0.0.1:3123/api/stats?query=" + querySource, {
+    }).then(p => {
+      console.log(66666, p.data)
+      setData(p.data.data)
       setLoading(false)
     }).catch(ex => {
       console.warn('Subgraph request failed error: %s subgraphUrl: %s', ex.message, subgraphUrl)
       setError(ex)
       setLoading(false)
     })
+    // client.query({ query }).then(res => {
+    //   setData(res.data)
+    //   setLoading(false)
+    // }).catch(ex => {
+    //   console.warn('Subgraph request failed error: %s subgraphUrl: %s', ex.message, subgraphUrl)
+    //   setError(ex)
+    //   setLoading(false)
+    // })
   }, [querySource, setData, setError, setLoading])
 
   return [data, loading, error]
@@ -420,7 +407,7 @@ export function useTradersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
     }
 
     let feesCumulative = 0
-    return feesData.reduce((memo, { timestamp, margin: fees}) => {
+    return feesData.reduce((memo, { timestamp, margin: fees }) => {
       feesCumulative += fees
       memo[timestamp] = {
         fees,
@@ -496,7 +483,7 @@ export function useTradersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
         Math.abs(maxCurrentCumulativePnl),
         Math.abs(minCurrentCumulativePnl)
       ),
-      
+
     }
 
     ret = {
@@ -539,7 +526,7 @@ export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
       return null
     }
 
-    const {a, b, c, d, e} = graphData
+    const { a, b, c, d, e } = graphData
     const all = [...a, ...b, ...c, ...d, ...e]
 
     const totalVolumeBySource = a.reduce((acc, item) => {
@@ -603,10 +590,7 @@ export function useTotalVolumeFromServer() {
 }
 
 function getServerHostname(chainName) {
-  if (chainName == "avalanche") {
-    return 'eddx-avax-server.uc.r.appspot.com'
-  }
-  return 'eddx-server-mainnet.uw.r.appspot.com'
+  return '127.0.0.1:3123/api'
 }
 
 export function useVolumeDataRequest(url, defaultValue, from, to, fetcher = defaultFetcher) {
@@ -631,7 +615,7 @@ export function useVolumeDataRequest(url, defaultValue, from, to, fetcher = defa
 
 export function useVolumeDataFromServer({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
   const PROPS = 'margin liquidation swap mint burn'.split(' ')
-  const [data, loading] = useVolumeDataRequest(`https://${getServerHostname(chainName)}/daily_volume`, null, from, to, async url => {
+  const [data, loading] = useVolumeDataRequest(`http://${getServerHostname(chainName)}/daily_volume`, null, from, to, async url => {
     let after
     const ret = []
     // eslint-disable-next-line no-constant-condition
@@ -807,7 +791,7 @@ export function useFundingRateData({ from = FIRST_DATE_TS, to = NOW_TS, chainNam
       group[symbol] = fundingRate
       return memo
     }, {})
-    
+
     return fillNa(sortBy(Object.values(groups), 'timestamp'))
   }, [graphData])
 
@@ -818,7 +802,7 @@ const MOVING_AVERAGE_DAYS = 7
 const MOVING_AVERAGE_PERIOD = 86400 * MOVING_AVERAGE_DAYS
 
 export function useVolumeData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
-	const PROPS = 'margin liquidation swap mint burn'.split(' ')
+  const PROPS = 'margin liquidation swap mint burn'.split(' ')
   const timestampProp = chainName === "arbitrum" ? "id" : "timestamp"
   const query = `{
     volumeStats(
@@ -839,7 +823,7 @@ export function useVolumeData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "
       return null
     }
 
-    let ret =  sortBy(graphData.volumeStats, timestampProp).map(item => {
+    let ret = sortBy(graphData.volumeStats, timestampProp).map(item => {
       const ret = { timestamp: item[timestampProp] };
       let all = 0;
       PROPS.forEach(prop => {
@@ -935,7 +919,7 @@ export function useFeesData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "ar
           movingAverageAll
         }
         PROPS.forEach(prop => {
-           ret[prop] = sumBy(values, prop)
+          ret[prop] = sumBy(values, prop)
         })
         cumulativeByTs[timestamp] = cumulative
         return ret
@@ -962,7 +946,7 @@ export function useAumPerformanceData({ from = FIRST_DATE_TS, to = NOW_TS, group
     const ret = feesData.map((feeItem, i) => {
       const elpItem = elpData[i]
       const volumeItem = volumeData[i]
-      let apr = (feeItem?.all && elpItem?.aum) ? feeItem.all /  elpItem.aum * 100 * 365 * dailyCoef : null
+      let apr = (feeItem?.all && elpItem?.aum) ? feeItem.all / elpItem.aum * 100 * 365 * dailyCoef : null
       if (apr > 10000) {
         apr = null
       }
@@ -1079,7 +1063,7 @@ export function useElpData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arb
     ret = fillNa(ret)
     return ret
   }, [data])
-  
+
   return [elpChartData, loading, error]
 }
 
@@ -1152,7 +1136,7 @@ export function useElpPerformanceData(elpData, feesData, { from = FIRST_DATE_TS,
 
       const elpPrice = elpItem?.elpPrice
       const elpSupply = elpItem?.elpSupply
-      
+
       const feesItem = feesDataById[timestampGroup] || lastFeesItem
       lastFeesItem = feesItem
 
@@ -1249,14 +1233,14 @@ export function useElpPerformanceData(elpData, feesData, { from = FIRST_DATE_TS,
   return [elpPerformanceChartData]
 }
 
-export function useTokenStats({ 
+export function useTokenStats({
   from = FIRST_DATE_TS,
   to = NOW_TS,
   period = 'daily',
-  chainName = "arbitrum" 
+  chainName = "arbitrum"
 } = {}) {
 
-  const getTokenStatsFragment = ({skip = 0} = {}) => `
+  const getTokenStatsFragment = ({ skip = 0 } = {}) => `
     tokenStats(
       first: 1000,
       skip: ${skip},
@@ -1274,11 +1258,11 @@ export function useTokenStats({
   // Request more than 1000 records to retrieve maximum stats for period
   const query = `{
     a: ${getTokenStatsFragment()}
-    b: ${getTokenStatsFragment({skip: 1000})},
-    c: ${getTokenStatsFragment({skip: 2000})},
-    d: ${getTokenStatsFragment({skip: 3000})},
-    e: ${getTokenStatsFragment({skip: 4000})},
-    f: ${getTokenStatsFragment({skip: 5000})},
+    b: ${getTokenStatsFragment({ skip: 1000 })},
+    c: ${getTokenStatsFragment({ skip: 2000 })},
+    d: ${getTokenStatsFragment({ skip: 3000 })},
+    e: ${getTokenStatsFragment({ skip: 4000 })},
+    f: ${getTokenStatsFragment({ skip: 5000 })},
   }`
 
   const [graphData, loading, error] = useGraph(query, { chainName })
@@ -1296,7 +1280,7 @@ export function useTokenStats({
     const retrievedTokens = new Set();
 
     const timestampGroups = fullData.reduce((memo, item) => {
-      const {timestamp, token, ...stats} = item;
+      const { timestamp, token, ...stats } = item;
 
       const symbol = tokenSymbols[token] || token;
 
@@ -1314,15 +1298,15 @@ export function useTokenStats({
     const poolAmountUsdRecords = [];
 
     Object.entries(timestampGroups).forEach(([timestamp, dataItem]) => {
-        const poolAmountUsdRecord = Object.entries(dataItem).reduce((memo, [token, stats]) => {
-            memo.all += stats.poolAmountUsd;
-            memo[token] = stats.poolAmountUsd;
-            memo.timestamp = timestamp;
+      const poolAmountUsdRecord = Object.entries(dataItem).reduce((memo, [token, stats]) => {
+        memo.all += stats.poolAmountUsd;
+        memo[token] = stats.poolAmountUsd;
+        memo.timestamp = timestamp;
 
-            return memo;
-        }, {all: 0});
+        return memo;
+      }, { all: 0 });
 
-        poolAmountUsdRecords.push(poolAmountUsdRecord);
+      poolAmountUsdRecords.push(poolAmountUsdRecord);
     })
 
     return {

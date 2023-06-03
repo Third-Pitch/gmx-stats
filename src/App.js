@@ -93,8 +93,8 @@ const App = () => {
               <a href="https://eddx.io" target="_blank" className="nav-logo">
                 <img width="87" src={mode == 'dark' ? darkLogoIcon : lightLogoIcon} />
               </a>
-              <NavLink to="/" exact className="nav-link" activeClassName="active">Arbitrum</NavLink>
-              <NavLink to="/avalanche" className="nav-link">Avalanche</NavLink>
+              {/* <NavLink to="/" exact className="nav-link" activeClassName="active">Arbitrum</NavLink> */}
+              {/* <NavLink to="/avalanche" className="nav-link">Avalanche</NavLink> */}
             </div>
             <div className="nav-right">
               <a href="https://eddx.io" target="_blank" className="nav-link">APP</a>
@@ -123,12 +123,12 @@ const App = () => {
             <Route exact path="/" render={(props) => (
               <Arbitrum {...props} mode={mode} />
             )} />
-            <Route exact path="/avalanche" render={(props) => (
+            {/* <Route exact path="/avalanche" render={(props) => (
               <Avalanche {...props} mode={mode} />
             )} />
             <Route exact path="/referrals/:chainName" render={(props) => (
               <Referrals {...props} mode={mode} />
-            )} />
+            )} /> */}
             <Route exact path="/trading" component={Trading} />
           </div>
         </div>

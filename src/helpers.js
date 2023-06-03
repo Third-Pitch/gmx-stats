@@ -5,7 +5,7 @@ import { ethers } from 'ethers'
 import strftime from 'strftime'
 import chalk from 'chalk'
 
-import { BSC, ARBITRUM } from './addresses'
+import { BSC } from './addresses'
 
 const { BigNumber } = ethers
 
@@ -310,8 +310,6 @@ export function getProvider(chainId) {
   let rpc
   if (chainId === BSC) {
     rpc = 'https://bsc-dataseed1.defibit.io/'
-  } else if (chainId === ARBITRUM) {
-    rpc = 'https://arb1.arbitrum.io/rpc'
   }
   if (!rpc) {
     throw Error(`Unsupported chainId: ${chainId}`)

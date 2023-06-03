@@ -190,7 +190,7 @@ function Arbitrum(props) {
     <div className="Home">
       <div className="page-title-section">
         <div className="page-title-block">
-          <h1>Analytics / Arbitrum</h1>
+          <h1>Analytics</h1>
           {lastSubgraphBlock && lastBlock &&
             <p className={cx('page-description', { warning: isObsolete })}>
               {isObsolete && "Data is obsolete. "}
