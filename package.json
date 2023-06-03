@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@apollo/client": "3.4.17",
-    "axios": "^1.4.0",
     "babel-preset-razzle": "^4.0.5",
     "chalk": "^4.1.2",
     "classnames": "^2.3.1",
@@ -30,7 +29,6 @@
     "framer-motion": "^4.1.17",
     "graphql": "^15.8.0",
     "html-webpack-plugin": "^4.5.2",
-    "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^0.9.0",
     "moment": "^2.29.1",

@@ -33,7 +33,8 @@ export function csp(req, res, next) {
       "https://api.avax.network",
       "https://api.thegraph.com",
       "http://127.0.0.1:3123",
-      "https://api.coingecko.com"
+      "https://api.coingecko.com",
+      "https://api.studio.thegraph.com"
     ]
   }
   if (!IS_PRODUCTION) {

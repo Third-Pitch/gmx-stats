@@ -11,7 +11,6 @@ import { get24HourVolume } from './stats'
 import App from './App';
 import { getLogger } from './helpers'
 import { queryEarnData } from './dataProvider'
-import axios from 'axios';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
@@ -58,19 +57,6 @@ export default function routes(app) {
     const data = (await apiResponse.text()).toString()
     res.set('Content-Type', 'text/plain')
     res.send(formatUnits(data))
-  })
-
-  app.all('/api/stats', async (req, res) => {
-    console.log(12321321321);
-    axios.post("https://api.studio.thegraph.com/proxy/45535/test-stats/version/latest", {
-      "query": "{\n  feeStats(\n    first: 1000\n    orderBy: id\n    orderDirection: desc\n    where: {period: daily, id_gte: 1680516923, id_lte: 1685787323}\n    subgraphError: allow\n  ) {\n    id\n    margin\n    marginAndLiquidation\n    swap\n    mint\n    burn\n    __typename\n  }\n}",
-      "variables": null,
-      "extensions": {
-        "headers": null
-      }
-    }).then(p => {
-      res.send(p.data)
-    })
   })
 
   app.get('/api/volume/24h', async (req, res, next) => {

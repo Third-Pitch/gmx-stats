@@ -13,7 +13,6 @@ const { JsonRpcProvider } = ethers.providers
 import RewardReader from '../abis/RewardReader.json'
 import ElpManager from '../abis/ElpManager.json'
 import Token from '../abis/v1/Token.json'
-import axios from 'axios';
 
 const providers = {
   arbitrum: new JsonRpcProvider('https://arb1.arbitrum.io/rpc'),
@@ -305,8 +304,10 @@ export function useGraph(querySource, { subgraph = null, subgraphUrl = null, cha
     if (!subgraph) {
       subgraph = getChainSubgraph(chainName)
     }
-    subgraphUrl = "/api/test/proxy/45535/test-stats/version/latest" //`https://api.thegraph.com/subgraphs/name/${subgraph}`;
+    subgraphUrl = `https://api.thegraph.com/subgraphs/name/${subgraph}`;
   }
+
+  subgraphUrl = `https://api.studio.thegraph.com/query/45535/test-stats/version/latest`;
 
   const client = new ApolloClient({
     link: new HttpLink({ uri: subgraphUrl, fetch }),
@@ -321,25 +322,14 @@ export function useGraph(querySource, { subgraph = null, subgraphUrl = null, cha
   }, [querySource, setLoading])
 
   useEffect(() => {
-    console.log(3333, querySource)
-    axios.post("http://127.0.0.1:3123/api/stats?query=" + querySource, {
-    }).then(p => {
-      console.log(66666, p.data)
-      setData(p.data.data)
+    client.query({ query }).then(res => {
+      setData(res.data)
       setLoading(false)
     }).catch(ex => {
       console.warn('Subgraph request failed error: %s subgraphUrl: %s', ex.message, subgraphUrl)
       setError(ex)
       setLoading(false)
     })
-    // client.query({ query }).then(res => {
-    //   setData(res.data)
-    //   setLoading(false)
-    // }).catch(ex => {
-    //   console.warn('Subgraph request failed error: %s subgraphUrl: %s', ex.message, subgraphUrl)
-    //   setError(ex)
-    //   setLoading(false)
-    // })
   }, [querySource, setData, setError, setLoading])
 
   return [data, loading, error]
