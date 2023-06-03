@@ -44,6 +44,10 @@ if (fs.existsSync(oldPath) && fs.existsSync(newPath)) {
         });
         fs.writeFileSync(p, data, "utf-8");
     });
+
+    fs.unlinkSync(oldPath);
+    fs.renameSync(newPath, oldPath);
+
 }
 
 // let replaceList = [
