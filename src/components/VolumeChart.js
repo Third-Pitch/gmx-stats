@@ -44,7 +44,6 @@ export default function VolumeChart(props) {
   const controls = {
     convertToPercents: convertToPercentsHandler,
   }
-
   const {
     viewState,
     togglePercentView,

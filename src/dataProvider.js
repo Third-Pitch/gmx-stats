@@ -606,51 +606,54 @@ export function useVolumeDataRequest(url, defaultValue, from, to, fetcher = defa
 export function useVolumeDataFromServer({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
   const PROPS = 'margin liquidation swap mint burn'.split(' ')
   const [data, loading] = useVolumeDataRequest(`http://${getServerHostname(chainName)}/daily_volume`, null, from, to, async url => {
-    let after
-    const ret = []
+    return await (await fetch(url)).json();
+    // let after
+    // const ret = []
     // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const res = await (await fetch(url + (after ? `?after=${after}` : ''))).json()
-      if (res.length === 0) return ret
-      for (const item of res) {
-        if (item.data.timestamp < from) {
-          return ret
-        }
-        ret.push(item)
-      }
-      after = res[res.length - 1].id
-    }
+    // while (true) {
+    //   let res = after ? [] : jsondata;// await (await fetch(url + (after ? `?after=${after}` : ''))).json()
+    //   // res = data;
+    //   if (res.length === 0) return ret
+    //   for (const item of res) {
+    //     if (item.data.timestamp < from) {
+    //       return ret
+    //     }
+    //     ret.push(item)
+    //   }
+    //   after = res[res.length - 1].id
+    // }
   })
 
   const ret = useMemo(() => {
     if (!data) {
       return null
     }
+    const tmp = data;
+    // const tmp = data.reduce((memo, item) => {
+    //   const timestamp = item.data.timestamp
+    //   if (timestamp < from || timestamp > to) {
+    //     return memo
+    //   }
 
-    const tmp = data.reduce((memo, item) => {
-      const timestamp = item.data.timestamp
-      if (timestamp < from || timestamp > to) {
-        return memo
-      }
-
-      let type
-      if (item.data.action === 'Swap') {
-        type = 'swap'
-      } else if (item.data.action === 'SellUSDG') {
-        type = 'burn'
-      } else if (item.data.action === 'BuyUSDG') {
-        type = 'mint'
-      } else if (item.data.action.includes('LiquidatePosition')) {
-        type = 'liquidation'
-      } else {
-        type = 'margin'
-      }
-      const volume = Number(item.data.volume) / 1e30
-      memo[timestamp] = memo[timestamp] || {}
-      memo[timestamp][type] = memo[timestamp][type] || 0
-      memo[timestamp][type] += volume
-      return memo
-    }, {})
+    //   let type
+    //   if (item.data.action === 'Swap') {
+    //     type = 'swap'
+    //   } else if (item.data.action === 'SellUSDG') {
+    //     type = 'burn'
+    //   } else if (item.data.action === 'BuyUSDG') {
+    //     type = 'mint'
+    //   } else if (item.data.action.includes('LiquidatePosition')) {
+    //     type = 'liquidation'
+    //   } else {
+    //     type = 'margin'
+    //   }
+    //   const volume = Number(item.data.volume) / 1e30
+    //   console.log(3333, memo, volume);
+    //   memo[timestamp] = memo[timestamp] || {}
+    //   memo[timestamp][type] = memo[timestamp][type] || 0
+    //   memo[timestamp][type] += volume
+    //   return memo
+    // }, {})
 
     let cumulative = 0
     const cumulativeByTs = {}
