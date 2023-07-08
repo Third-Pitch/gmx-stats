@@ -501,7 +501,7 @@ function getSwapSourcesFragment(skip = 0, from, to) {
     }
   `
 }
-export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const query = `{
     a: ${getSwapSourcesFragment(0, from, to)}
     b: ${getSwapSourcesFragment(1000, from, to)}
@@ -510,7 +510,6 @@ export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
     e: ${getSwapSourcesFragment(4000, from, to)}
   }`
   const [graphData, loading, error] = useGraph(query, { chainName })
-
   let data = useMemo(() => {
     if (!graphData) {
       return null
@@ -738,7 +737,7 @@ export function useUsersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "a
   return [data, loading, error]
 }
 
-export function useFundingRateData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useFundingRateData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 'base' } = {}) {
   const query = `{
     fundingRates(
       first: 1000,
@@ -758,14 +757,13 @@ export function useFundingRateData({ from = FIRST_DATE_TS, to = NOW_TS, chainNam
   }`
   const [graphData, loading, error] = useGraph(query, { chainName })
 
-
   const data = useMemo(() => {
     if (!graphData) {
       return null
     }
 
     const groups = graphData.fundingRates.reduce((memo, item) => {
-      const symbol = tokenSymbols[item.token]
+      const symbol = tokenSymbols[ethers.utils.getAddress(item.token)]
       if (symbol === 'MIM') {
         return memo
       }
