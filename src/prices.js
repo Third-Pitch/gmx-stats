@@ -11,8 +11,8 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const logger = getLogger('prices')
 const ttlCache = new TtlCache(60, 1000)
 
-const LOAD_NEW_PRICES_LOOP_INTERVAL = IS_PRODUCTION ? 60000 : 5000
-const LOAD_OLD_PRICES_LOOP_INTERVAL = IS_PRODUCTION ? 15000 : 5000
+const LOAD_NEW_PRICES_LOOP_INTERVAL = IS_PRODUCTION ? 60000 : 50000
+const LOAD_OLD_PRICES_LOOP_INTERVAL = IS_PRODUCTION ? 15000 : 15000
 const PERIOD_TO_SECONDS = {
   '5m': 60 * 5,
   '15m': 60 * 15,
@@ -334,11 +334,13 @@ async function loadOldPrices(chainId, period) {
 
 if (IS_PRODUCTION || process.env.ENABLE_PRICES) {
   for (const period of Object.keys(PERIOD_TO_SECONDS)) {
-    loadNewPrices(ARBITRUM, period)
-    loadNewPrices(AVALANCHE, period)
+    loadNewPrices(BASE, period)
+    //loadNewPrices(ARBITRUM, period)
+    //loadNewPrices(AVALANCHE, period)
 
-    loadOldPrices(ARBITRUM, period)
-    loadOldPrices(AVALANCHE, period)
+    loadOldPrices(BASE, period)
+    //loadOldPrices(ARBITRUM, period)
+    //loadOldPrices(AVALANCHE, period)
   }
 }
 
