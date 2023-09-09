@@ -76,25 +76,25 @@ export async function queryEarnData(chainName, account) {
 
 
   depositTokens = [
-    '0x24B63ae170152FcCF6a11Cd77ffa2D7F04ed999D',// EDDX
-    '0x2DF1E0dBEC080a3Db97a19Cf955b9589EE511cfd',// esEDDX
-    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',// stakedEddxTracker sEDDX
-    '0x67798B0f94378528318a5739C2d17a4652cF9A1A', //bonusEddxTracker sbEDDX
-    '0xcE3929B081c1924c936dE2AB47E7e093F985f266', //bnEDDX
-    '0x897Cc73723966a0648E99281986eeff71313E95F'] //ELP
+    '0xF6E6EA5933c3578696e7C0E452ebdDf34eaAB0fb',// EDDX
+    '0x149A4266024fF7e355eD8D396631ee3C88B49d78',// esEDDX
+    '0xF9969c707049F542DB41cBd62aeAC7ACE0c7fD40',// stakedEddxTracker sEDDX
+    '0x33b3d1A1Ca443CBEA8F819cB6e0601BADc4dE683', //bonusEddxTracker sbEDDX
+    '0xd4100517Dd57bfD90859A33f6Ad44B72ebe51f71', //bnEDDX
+    '0x6990421F17Aa900a7c2474e4316fe4C7C0985236'] //ELP
   rewardTrackersForDepositBalances = [
-    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
-    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
-    '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
-    '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
-    '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
-    '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
+    '0xF9969c707049F542DB41cBd62aeAC7ACE0c7fD40',//stakedEddxTracker
+    '0xF9969c707049F542DB41cBd62aeAC7ACE0c7fD40',//stakedEddxTracker
+    '0x33b3d1A1Ca443CBEA8F819cB6e0601BADc4dE683',//bonusEddxTracker
+    '0x68c029d8473908E0f2AE050488ED80d947Ab43c7',// feeEddxTracker
+    '0x68c029d8473908E0f2AE050488ED80d947Ab43c7',// feeEddxTracker
+    '0x2c2d16b8574Fc105312C38B01412A15aF1d747b9']//feeElpTracker
   rewardTrackersForStakingInfo = [
-    '0x420ddA6D4D2384d2dBa3e392143A487517C79bE1',//stakedEddxTracker
-    '0x67798B0f94378528318a5739C2d17a4652cF9A1A',//bonusEddxTracker
-    '0x6a1B048373267BC49EEBF3915C4E72F667AcC8aC',// feeEddxTracker
-    '0x357C8A51981237bF34759871B9a62993A77E634A',//stakedElpTracker
-    '0xDb0bdACf2C8A928756D86034B133bb7F2191Ca91']//feeElpTracker
+    '0xF9969c707049F542DB41cBd62aeAC7ACE0c7fD40',//stakedEddxTracker
+    '0x33b3d1A1Ca443CBEA8F819cB6e0601BADc4dE683',//bonusEddxTracker
+    '0x68c029d8473908E0f2AE050488ED80d947Ab43c7',// feeEddxTracker
+    '0xF28519E637E2bF570Bf5e1fa19c4aae7A31D5F7a',//stakedElpTracker
+    '0x2c2d16b8574Fc105312C38B01412A15aF1d747b9']//feeElpTracker
 
   const [
     balances,
@@ -190,11 +190,11 @@ const knownSwapSources = {
     '0xdd94018f54e565dbfc939f7c44a16e163faab331': 'Odos Router'
   },
   base: {
-    '0xf925098c0fb905D7256a61FfA388940f8E8Be853': 'EDDX Router', // Router
-    '0x9Aee9917A0E7D6fCe32751D7F93e9fB1658dD16D': 'EDDX OrderBook', // Orderbook
-    '0x8475Fbe5BcCF02c66c386dD8AAf251005e4b0cC8': 'EDDX PositionManager', // PositionManager old
-    '0x43Ba508844BAB522Fe17d3a063316C52f57463e8': 'EDDX OrderExecutor', // OrderExecutor
-    '0x1aC4d5F83ef11bEA355bAad28AfeA0EF50250aaC': 'EDDX FastPriceFeed A', // FastPriceFeed
+    '0xcE322a4D79AaE58254AD3d14fCCd0eC23106bE09': 'EDDX Router', // Router
+    '0xc87E6829F9091afA0D20F395df95694CF06d1cC5': 'EDDX OrderBook', // Orderbook
+    '0x7a5aA325f32AC71938ae4D0dCDe5Bc79A76c154F': 'EDDX PositionManager', // PositionManager old
+    '0x623D58D8F251CA07d8AF018a19867A7184B562C9': 'EDDX OrderExecutor', // OrderExecutor
+    '0x5a3Ad7a6cAfC0a4a3a1eb8E63e4B0b43cC9bC91A': 'EDDX FastPriceFeed A', // FastPriceFeed
     '0x3b6067d4caa8a14c63fdbe6318f27a0bbc9f9237': 'Dodo',
     '0x11111112542d85b3ef69ae05771c2dccff4faa26': '1inch',
     '0x6352a56caadc4f1e25cd6c75970fa768a3304e64': 'OpenOcean', // OpenOceanExchangeProxy
