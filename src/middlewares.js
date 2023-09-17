@@ -38,6 +38,7 @@ export function csp(req, res, next) {
       "https://testgraph.eddx.io",
       "https://testapi.eddx.io",
       "https://teststat.eddx.io",
+      "https://goerli.base.org"
 
     ]
   }
