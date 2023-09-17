@@ -307,7 +307,7 @@ export function useGraph(querySource, { subgraph = null, subgraphUrl = null, cha
     subgraphUrl = `https://api.thegraph.com/subgraphs/name/${subgraph}`;
   }
 
-  subgraphUrl = `https://api.studio.thegraph.com/query/45535/test-stats/version/latest`;
+  subgraphUrl = `https://testgraph.eddx.io/subgraphs/name/test-stats`;
 
   const client = new ApolloClient({
     link: new HttpLink({ uri: subgraphUrl, fetch }),

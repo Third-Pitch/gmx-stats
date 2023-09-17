@@ -25,7 +25,7 @@ const avalancheStatsClient = new ApolloClient({
 })
 
 const baseStatsClient = new ApolloClient({
-  link: new HttpLink({ uri: 'https://api.studio.thegraph.com/query/45535/test-stats/version/latest', fetch }),
+  link: new HttpLink({ uri: 'https://testgraph.eddx.io/subgraphs/name/test-stats', fetch }),
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })
@@ -56,7 +56,7 @@ const avalanchePricesClient = new ApolloClient({
 })
 
 const basePricesClient = new ApolloClient({
-  link: new HttpLink({ uri: 'https://api.studio.thegraph.com/query/45535/test-price/version/latest', fetch }),
+  link: new HttpLink({ uri: 'https://testgraph.eddx.io/subgraphs/name/test-price', fetch }),
   cache: new InMemoryCache(),
   defaultOptions: apolloOptions
 })
