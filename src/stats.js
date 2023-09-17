@@ -4,7 +4,7 @@ import { getLogger } from './helpers'
 
 import TtlCache from './ttl-cache'
 import { getStatsClient } from './graph'
-import { ARBITRUM, AVALANCHE, BASE } from './addresses'
+import { BASE } from './addresses'
 
 const CACHE_TTL = 300
 const ttlCache = new TtlCache(CACHE_TTL, 10)
@@ -26,9 +26,10 @@ updateCache();
 
 async function get24HourVolumeForChain(chainId) {
   const client = getStatsClient(chainId);
+  // orderBy: ${ chainId === AVALANCHE ? "timestamp" : "id" },
   const query = `{
     volumeStats(
-      orderBy: ${chainId === AVALANCHE ? "timestamp" : "id"},
+      orderBy: id,
       orderDirection: desc,
       first: 24
       where: { period: hourly }

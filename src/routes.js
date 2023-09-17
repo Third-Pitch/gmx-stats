@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom';
 import { renderToString } from 'react-dom/server';
 
 import { createHttpError } from './utils';
-import { ARBITRUM, AVALANCHE, BASE } from './addresses'
+import { BASE } from './addresses'
 import { getPricesLimit, getLastUpdatedTimestamp, VALID_PERIODS } from './prices'
 import { get24HourVolume } from './stats'
 
