@@ -34,7 +34,11 @@ export function csp(req, res, next) {
       "https://api.thegraph.com",
       "http://127.0.0.1:3123",
       "https://api.coingecko.com",
-      "https://api.studio.thegraph.com"
+      "https://api.studio.thegraph.com",
+      "https://testgraph.eddx.io",
+      "https://testapi.eddx.io",
+      "https://teststat.eddx.io",
+
     ]
   }
   if (!IS_PRODUCTION) {
