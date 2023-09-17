@@ -90,15 +90,15 @@ const App = () => {
                 {!isDrawerVisible && <RiMenuLine className="App-header-menu-icon" />}
                 {isDrawerVisible && <FaTimes className="App-header-menu-icon" />}
               </div>
-              <a href="https://eddx.io" target="_blank" className="nav-logo">
+              <a href="https://test.eddx.io" target="_blank" className="nav-logo" rel="noreferrer">
                 <img width="87" src={mode == 'dark' ? darkLogoIcon : lightLogoIcon} />
               </a>
               {/* <NavLink to="/" exact className="nav-link" activeClassName="active">Arbitrum</NavLink> */}
               {/* <NavLink to="/avalanche" className="nav-link">Avalanche</NavLink> */}
             </div>
             <div className="nav-right">
-              <a href="https://eddx.io" target="_blank" className="nav-link">APP</a>
-              <a href="https://eddxio.gitbook.io/eddx/" target="_blank" className="nav-link">DOCS</a>
+              <a href="https://test.eddx.io" target="_blank" className="nav-link" rel="noreferrer">APP</a>
+              {/* <a href="https://eddxio.gitbook.io/eddx/" target="_blank" className="nav-link" rel="noreferrer">DOCS</a> */}
               <div className='modeselect' onClick={() => switchMode()}>
                 {mode == 'dark' ? <FaSun /> : <FaMoon />}
               </div>
