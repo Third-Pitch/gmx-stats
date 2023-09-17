@@ -294,17 +294,17 @@ function getImpermanentLoss(change) {
 }
 
 function getChainSubgraph(chainName) {
-  return chainName === "arbitrum" ? "eddx-io/eddx-stats" : "eddx-io/eddx-avalanche-stats"
+  return chainName === "base" ? "eddx-io/eddx-stats" : "eddx-io/eddx-avalanche-stats"
 }
 
-export function useGraph(querySource, { subgraph = null, subgraphUrl = null, chainName = "arbitrum" } = {}) {
+export function useGraph(querySource, { subgraph = null, subgraphUrl = null, chainName = "base" } = {}) {
   const query = gql(querySource)
 
   if (!subgraphUrl) {
     if (!subgraph) {
       subgraph = getChainSubgraph(chainName)
     }
-    subgraphUrl = `https://api.thegraph.com/subgraphs/name/${subgraph}`;
+    // subgraphUrl = `https://api.thegraph.com/subgraphs/name/${subgraph}`;
   }
 
   subgraphUrl = `https://testgraph.eddx.io/subgraphs/name/test-stats`;
@@ -335,7 +335,7 @@ export function useGraph(querySource, { subgraph = null, subgraphUrl = null, cha
   return [data, loading, error]
 }
 
-export function useLastBlock(chainName = "arbitrum") {
+export function useLastBlock(chainName = "base") {
   const [data, setData] = useState()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -349,7 +349,7 @@ export function useLastBlock(chainName = "arbitrum") {
   return [data, loading, error]
 }
 
-export function useLastSubgraphBlock(chainName = "arbitrum") {
+export function useLastSubgraphBlock(chainName = "base") {
   const [data, loading, error] = useGraph(`{
     _meta {
       block {
@@ -372,7 +372,7 @@ export function useLastSubgraphBlock(chainName = "arbitrum") {
   return [block, loading, error]
 }
 
-export function useTradersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useTradersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const [closedPositionsData, loading, error] = useGraph(`{
     tradingStats(
       first: 1000
@@ -602,7 +602,7 @@ export function useVolumeDataRequest(url, defaultValue, from, to, fetcher = defa
   return [data, loading, error]
 }
 
-export function useVolumeDataFromServer({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useVolumeDataFromServer({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const PROPS = 'margin liquidation swap mint burn'.split(' ')
   const [data, loading] = useVolumeDataRequest(`https://${getServerHostname(chainName)}/daily_volume`, null, from, to, async url => {
     return await (await fetch(url)).json();
@@ -684,7 +684,7 @@ export function useVolumeDataFromServer({ from = FIRST_DATE_TS, to = NOW_TS, cha
   return [ret, loading]
 }
 
-export function useUsersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useUsersData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const query = `{
     userStats(
       first: 1000
@@ -792,9 +792,9 @@ export function useFundingRateData({ from = FIRST_DATE_TS, to = NOW_TS, chainNam
 const MOVING_AVERAGE_DAYS = 7
 const MOVING_AVERAGE_PERIOD = 86400 * MOVING_AVERAGE_DAYS
 
-export function useVolumeData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useVolumeData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const PROPS = 'margin liquidation swap mint burn'.split(' ')
-  const timestampProp = chainName === "arbitrum" ? "id" : "timestamp"
+  const timestampProp = chainName === "base" ? "id" : "timestamp"
   const query = `{
     volumeStats(
       first: 1000,
@@ -847,7 +847,7 @@ export function useVolumeData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "
   return [data, loading, error]
 }
 
-export function useFeesData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useFeesData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const PROPS = 'margin liquidation swap mint burn'.split(' ')
   const feesQuery = `{
     feeStats(
@@ -962,8 +962,8 @@ export function useAumPerformanceData({ from = FIRST_DATE_TS, to = NOW_TS, group
   return [data, feesLoading || elpLoading || volumeLoading]
 }
 
-export function useElpData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
-  const timestampProp = chainName === 'arbitrum' ? 'id' : 'timestamp'
+export function useElpData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
+  const timestampProp = chainName === 'base' ? 'id' : 'timestamp'
   const query = `{
     elpStats(
       first: 1000
@@ -1058,7 +1058,7 @@ export function useElpData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arb
   return [elpChartData, loading, error]
 }
 
-export function useElpPerformanceData(elpData, feesData, { from = FIRST_DATE_TS, chainName = "arbitrum" } = {}) {
+export function useElpPerformanceData(elpData, feesData, { from = FIRST_DATE_TS, chainName = "base" } = {}) {
   const [btcPrices] = useCoingeckoPrices('BTC', { from })
   const [ethPrices] = useCoingeckoPrices('ETH', { from })
   const [avaxPrices] = useCoingeckoPrices('AVAX', { from })
@@ -1228,7 +1228,7 @@ export function useTokenStats({
   from = FIRST_DATE_TS,
   to = NOW_TS,
   period = 'daily',
-  chainName = "arbitrum"
+  chainName = "base"
 } = {}) {
 
   const getTokenStatsFragment = ({ skip = 0 } = {}) => `
@@ -1309,7 +1309,7 @@ export function useTokenStats({
   return [data, loading, error]
 }
 
-export function useReferralsData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
+export function useReferralsData({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "base" } = {}) {
   const query = `{
     globalStats(
       first: 1000
@@ -1333,7 +1333,7 @@ export function useReferralsData({ from = FIRST_DATE_TS, to = NOW_TS, chainName 
       timestamp
     }
   }`
-  const subgraph = chainName === "arbitrum"
+  const subgraph = chainName === "base"
     ? "eddx-io/eddx-arbitrum-referrals"
     : "eddx-io/eddx-avalanche-referrals"
   const [graphData, loading, error] = useGraph(query, { subgraph })

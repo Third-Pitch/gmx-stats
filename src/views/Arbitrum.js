@@ -158,6 +158,7 @@ function Arbitrum(props) {
 
   const [lastSubgraphBlock, , lastSubgraphBlockError] = useLastSubgraphBlock()
   const [lastBlock] = useLastBlock()
+  console.log(99999, lastBlock, lastSubgraphBlock)
 
   const isObsolete = lastSubgraphBlock && lastBlock && lastBlock.timestamp - lastSubgraphBlock.timestamp > 3600
 
@@ -195,7 +196,7 @@ function Arbitrum(props) {
             <p className={cx('page-description', { warning: isObsolete })}>
               {isObsolete && "Data is obsolete. "}
               Updated {moment(lastSubgraphBlock.timestamp * 1000).fromNow()}
-              &nbsp;at block <a rel="noreferrer" target="_blank" href={`https://arbiscan.io/block/${lastSubgraphBlock.number}`}>{lastSubgraphBlock.number}</a>
+              &nbsp;at block <a rel="noreferrer" target="_blank" href={`https://goerli.basescan.org/block/${lastSubgraphBlock.number}`}>{lastSubgraphBlock.number}</a>
             </p>
           }
           {
@@ -299,7 +300,7 @@ function Arbitrum(props) {
           </ChartWrapper>
         </div>
         <div className="chart-cell">
-          <PoolAmountChart 
+          <PoolAmountChart
             from={from}
             to={to}
             syncId="syncElp"
@@ -311,20 +312,20 @@ function Arbitrum(props) {
             loading={elpLoading}
             data={elpPerformanceData}
             csvFields={[
-              {key: 'syntheticPrice'},
-              {key: 'elpPrice'},
-              {key: 'elpPlusFees'},
-              {key: 'lpBtcPrice'},
-              {key: 'lpEthPrice'},
-              {key: 'performanceSyntheticCollectedFees'},
-              {key: 'indexBtcCount'},
-              {key: 'indexEthCount'},
-              {key: 'indexAvaxCount'},
-              {key: 'indexStableCount'},
-              {key: 'BTC_WEIGHT'},
-              {key: 'ETH_WEIGHT'},
-              {key: 'AVAX_WEIGHT'},
-              {key: 'STABLE_WEIGHT'},
+              { key: 'syntheticPrice' },
+              { key: 'elpPrice' },
+              { key: 'elpPlusFees' },
+              { key: 'lpBtcPrice' },
+              { key: 'lpEthPrice' },
+              { key: 'performanceSyntheticCollectedFees' },
+              { key: 'indexBtcCount' },
+              { key: 'indexEthCount' },
+              { key: 'indexAvaxCount' },
+              { key: 'indexStableCount' },
+              { key: 'BTC_WEIGHT' },
+              { key: 'ETH_WEIGHT' },
+              { key: 'AVAX_WEIGHT' },
+              { key: 'STABLE_WEIGHT' },
             ]}
           >
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
@@ -345,9 +346,9 @@ function Arbitrum(props) {
             </ResponsiveContainer>
             <div className="chart-description">
               <p>
-                <span style={{color: COLORS[0]}}>% of Index (with fees)</span> is Elp with fees / Index Price * 100. Index is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
-                <br/>
-                <span style={{color: COLORS[4]}}>% of LP ETH-USDC (with fees)</span> is Elp Price with fees / LP ETH-USDC * 100<br/>
+                <span style={{ color: COLORS[0] }}>% of Index (with fees)</span> is Elp with fees / Index Price * 100. Index is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
+                <br />
+                <span style={{ color: COLORS[4] }}>% of LP ETH-USDC (with fees)</span> is Elp Price with fees / LP ETH-USDC * 100<br />
               </p>
             </div>
           </ChartWrapper>
@@ -358,20 +359,20 @@ function Arbitrum(props) {
             loading={elpLoading}
             data={elpPerformanceData}
             csvFields={[
-              {key: 'syntheticPrice'},
-              {key: 'elpPrice'},
-              {key: 'elpPlusFees'},
-              {key: 'lpBtcPrice'},
-              {key: 'lpEthPrice'},
-              {key: 'performanceSyntheticCollectedFees'},
-              {key: 'indexBtcCount'},
-              {key: 'indexEthCount'},
-              {key: 'indexAvaxCount'},
-              {key: 'indexStableCount'},
-              {key: 'BTC_WEIGHT'},
-              {key: 'ETH_WEIGHT'},
-              {key: 'AVAX_WEIGHT'},
-              {key: 'STABLE_WEIGHT'},
+              { key: 'syntheticPrice' },
+              { key: 'elpPrice' },
+              { key: 'elpPlusFees' },
+              { key: 'lpBtcPrice' },
+              { key: 'lpEthPrice' },
+              { key: 'performanceSyntheticCollectedFees' },
+              { key: 'indexBtcCount' },
+              { key: 'indexEthCount' },
+              { key: 'indexAvaxCount' },
+              { key: 'indexStableCount' },
+              { key: 'BTC_WEIGHT' },
+              { key: 'ETH_WEIGHT' },
+              { key: 'AVAX_WEIGHT' },
+              { key: 'STABLE_WEIGHT' },
             ]}
           >
             <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
@@ -394,8 +395,8 @@ function Arbitrum(props) {
             </ResponsiveContainer>
             <div className="chart-description">
               <p>
-                <span style={{color: COLORS[3]}}>Elp with fees</span> is based on ELP share of fees received and excluding esEDDX rewards<br/>
-                <span style={{color: COLORS[2]}}>Index Price</span> is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
+                <span style={{ color: COLORS[3] }}>Elp with fees</span> is based on ELP share of fees received and excluding esEDDX rewards<br />
+                <span style={{ color: COLORS[2] }}>Index Price</span> is a basket of 25% BTC, 25% ETH, 50% USDC rebalanced once&nbsp;a&nbsp;day
 
               </p>
             </div>
@@ -491,7 +492,7 @@ function Arbitrum(props) {
           </ChartWrapper>
         </div>
         <div className="chart-cell">
-          <TradersProfitLossChart 
+          <TradersProfitLossChart
             syncId="tradersId"
             loading={tradersLoading}
             tradersData={tradersData}
@@ -500,45 +501,45 @@ function Arbitrum(props) {
           />
         </div>
         <div className="chart-cell">
-           <GenericChart
-              loading={tradersLoading}
-              title="Open Interest"
-              data={tradersData?.data.map(item => ({ all: item.openInterest, ...item }))}
-              controls={{
-                convertToPercents: convertToPercents
-              }}
-              yaxisDataKey="all"
-              items={[{ key: 'shortOpenInterest', name: 'Short', color: "#f93333" }, { key: 'longOpenInterest', name: 'Long', color: '#22c761' }]}
-              type="Bar"
-            />
+          <GenericChart
+            loading={tradersLoading}
+            title="Open Interest"
+            data={tradersData?.data.map(item => ({ all: item.openInterest, ...item }))}
+            controls={{
+              convertToPercents: convertToPercents
+            }}
+            yaxisDataKey="all"
+            items={[{ key: 'shortOpenInterest', name: 'Short', color: "#f93333" }, { key: 'longOpenInterest', name: 'Long', color: '#22c761' }]}
+            type="Bar"
+          />
         </div>
         <div className="chart-cell">
-           <GenericChart
-              loading={fundingRateLoading}
-              title="Borrowing Rate Annualized"
-              data={fundingRateData}
-              yaxisDataKey="ETH"
-              yaxisTickFormatter={yaxisFormatterPercent}
-              tooltipFormatter={tooltipFormatterPercent}
-              items={[{ key: 'ETH' }, { key: 'BTC' }, { key: 'UNI' }, { key: 'LINK' }, { key: 'USDC' }, { key: 'USDT' }, { key: 'MIM' }, { key: 'FRAX', color: mode == "dark" ? "#FFF" : "#000" }, { key: 'DAI' }]}
-              type="Line"
-              yaxisDomain={[0, 90 /* ~87% is a maximum yearly borrow rate */]}
-              isCoinChart={true}
-            />
+          <GenericChart
+            loading={fundingRateLoading}
+            title="Borrowing Rate Annualized"
+            data={fundingRateData}
+            yaxisDataKey="ETH"
+            yaxisTickFormatter={yaxisFormatterPercent}
+            tooltipFormatter={tooltipFormatterPercent}
+            items={[{ key: 'ETH' }, { key: 'BTC' }, { key: 'UNI' }, { key: 'LINK' }, { key: 'USDC' }, { key: 'USDT' }, { key: 'MIM' }, { key: 'FRAX', color: mode == "dark" ? "#FFF" : "#000" }, { key: 'DAI' }]}
+            type="Line"
+            yaxisDomain={[0, 90 /* ~87% is a maximum yearly borrow rate */]}
+            isCoinChart={true}
+          />
         </div>
         <div className="chart-cell">
-           <GenericChart
-              syncId="syncElp"
-              loading={aumPerformanceLoading}
-              title="AUM Performance Annualized"
-              data={aumPerformanceData}
-              yaxisDataKey="apr"
-              yaxisTickFormatter={yaxisFormatterPercent}
-              tooltipFormatter={tooltipFormatterPercent}
-              items={[{ key: 'apr', name: 'APR', color: COLORS[0] }]}
-              description="Formula = Daily Fees / ELP Pool * 365 days * 100"
-              type="Composed"
-            />
+          <GenericChart
+            syncId="syncElp"
+            loading={aumPerformanceLoading}
+            title="AUM Performance Annualized"
+            data={aumPerformanceData}
+            yaxisDataKey="apr"
+            yaxisTickFormatter={yaxisFormatterPercent}
+            tooltipFormatter={tooltipFormatterPercent}
+            items={[{ key: 'apr', name: 'APR', color: COLORS[0] }]}
+            description="Formula = Daily Fees / ELP Pool * 365 days * 100"
+            type="Composed"
+          />
         </div>
         <div className="chart-cell">
           <GenericChart
@@ -595,24 +596,24 @@ function Arbitrum(props) {
           />
         </div>
         <div className="chart-cell">
-           <GenericChart
-              syncId="syncElp"
-              loading={usersLoading}
-              title="New vs. Existing Users"
-              data={usersData?.map(item => ({ ...item, all: item.uniqueCount }))}
-              truncateYThreshold={7000}
-              yaxisDataKey="uniqueCount"
-              rightYaxisDataKey="oldPercent"
-              yaxisTickFormatter={yaxisFormatterNumber}
-              tooltipFormatter={tooltipFormatterNumber}
-              tooltipLabelFormatter={tooltipLabelFormatterUnits}
-              items={[
-                { key: 'newCount', name: 'New'},
-                { key: 'oldCount', name: 'Existing'},
-                { key: 'oldPercent', name: 'Existing %', yAxisId: 'right', type: 'Line', strokeWidth: 2, color: COLORS[4], unit: '%' }
-              ]}
-              type="Composed"
-            />
+          <GenericChart
+            syncId="syncElp"
+            loading={usersLoading}
+            title="New vs. Existing Users"
+            data={usersData?.map(item => ({ ...item, all: item.uniqueCount }))}
+            truncateYThreshold={7000}
+            yaxisDataKey="uniqueCount"
+            rightYaxisDataKey="oldPercent"
+            yaxisTickFormatter={yaxisFormatterNumber}
+            tooltipFormatter={tooltipFormatterNumber}
+            tooltipLabelFormatter={tooltipLabelFormatterUnits}
+            items={[
+              { key: 'newCount', name: 'New' },
+              { key: 'oldCount', name: 'Existing' },
+              { key: 'oldPercent', name: 'Existing %', yAxisId: 'right', type: 'Line', strokeWidth: 2, color: COLORS[4], unit: '%' }
+            ]}
+            type="Composed"
+          />
         </div>
         <div className="chart-cell">
           <GenericChart
