@@ -604,7 +604,7 @@ export function useVolumeDataRequest(url, defaultValue, from, to, fetcher = defa
 
 export function useVolumeDataFromServer({ from = FIRST_DATE_TS, to = NOW_TS, chainName = "arbitrum" } = {}) {
   const PROPS = 'margin liquidation swap mint burn'.split(' ')
-  const [data, loading] = useVolumeDataRequest(`http://${getServerHostname(chainName)}/daily_volume`, null, from, to, async url => {
+  const [data, loading] = useVolumeDataRequest(`https://${getServerHostname(chainName)}/daily_volume`, null, from, to, async url => {
     return await (await fetch(url)).json();
     // let after
     // const ret = []
