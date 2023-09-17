@@ -565,7 +565,7 @@ export function useSwapSources({ from = FIRST_DATE_TS, to = NOW_TS, chainName = 
 }
 
 export function useTotalVolumeFromServer() {
-  const [data, loading] = useRequest('http://127.0.0.1:3123/api/total_volume')
+  const [data, loading] = useRequest('https://testapi.eddx.io/api/total_volume')
   return useMemo(() => {
     if (!data) {
       return [data, loading]
@@ -579,7 +579,7 @@ export function useTotalVolumeFromServer() {
 }
 
 function getServerHostname(chainName) {
-  return '127.0.0.1:3123/api'
+  return 'testapi.eddx.io/api'
 }
 
 export function useVolumeDataRequest(url, defaultValue, from, to, fetcher = defaultFetcher) {

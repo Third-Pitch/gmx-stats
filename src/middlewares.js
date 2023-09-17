@@ -32,7 +32,7 @@ export function csp(req, res, next) {
       "https://arb1.arbitrum.io",
       "https://api.avax.network",
       "https://api.thegraph.com",
-      "http://127.0.0.1:3123",
+      "https://testapi.eddx.io",
       "https://api.coingecko.com",
       "https://api.studio.thegraph.com",
       "https://testgraph.eddx.io",
