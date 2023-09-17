@@ -3,7 +3,7 @@
   "version": "4.0.5",
   "license": "MIT",
   "scripts": {
-    "build:prod": "node ./setting/setting.js && PORT=8080 razzle build --noninteractive",
+    "build:prod": "node ./setting/setting.js && PORT=3113 razzle build --noninteractive",
     "build:dev": "node ./setting/setting.js && PORT=3113 razzle build --noninteractive",
     "build-upload": "node ./setting/setting.js && PORT=8080 razzle build --noninteractive && tar -zcvf build.tar.gz build && scp build.tar.gz do2:~/www/gmx-stats",
     "test": "razzle test --env=jsdom",
